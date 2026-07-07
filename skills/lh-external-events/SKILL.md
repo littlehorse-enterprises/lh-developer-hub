@@ -1,7 +1,6 @@
 ---
 name: lh-external-event
-description: Write a  that waits for callbacks from external systems with an ExternalEvent.
----
+description: This skill defines external events in littlehorse. How a littlehorse workflow can pause and wait for an external system to send an event.
 
 * An `ExternalEventDef` is a metadata object for an `ExternalEvent`
 * An `ExternalEvent` is an instance of an `ExternalEventDef`
