@@ -4,3 +4,37 @@
  * This is a general purpose Gradle build.
  * Learn more about Gradle by exploring our Samples at https://docs.gradle.org/9.0.0/samples
  */
+
+allprojects {
+	repositories {
+		mavenCentral()
+	}
+}
+
+subprojects {
+	plugins.withId('java') {
+		java {
+			toolchain {
+				languageVersion = JavaLanguageVersion.of(21)
+			}
+		}
+	}
+}
+
+tasks.register('buildJavaExamples') {
+	group = 'examples'
+	description = 'Build all Java lh-server example modules.'
+	dependsOn(
+		':examples:lh-server:java:taskdef-app:build',
+		':examples:lh-server:java:wfspec-app:build'
+	)
+}
+
+tasks.register('runJavaExamples') {
+	group = 'examples'
+	description = 'Run all Java lh-server example applications.'
+	dependsOn(
+		':examples:lh-server:java:taskdef-app:run',
+		':examples:lh-server:java:wfspec-app:run'
+	)
+}
