@@ -22,7 +22,7 @@ import io.littlehorse.sdk.worker.LHTaskWorker;
 public class App {
 
     private static final String PLAN_NAME = "onboarding-migration-plan";
-    private static final String WF_NAME = "onboarding-workflow-w-variable";
+    private static final String WF_NAME = "onboarding-workflow";
 
     public static void main(String[] args) {
         if (args.length == 0) {

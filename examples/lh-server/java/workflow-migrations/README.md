@@ -25,6 +25,12 @@ From the repository root:
 ./gradlew :examples:lh-server:java:workflow-migrations:run --args='step2'
 ```
 
+At this point we can start a wfRun.
+
+```sh
+lhctl run onboarding-workflow --majorVersion 0 --revision 0
+```
+
 ## Step 3: Send migration request
 Run this in a separate terminal after steps 1 and 2 are complete.
 Provide an existing WfRun ID to apply the migration plan.
