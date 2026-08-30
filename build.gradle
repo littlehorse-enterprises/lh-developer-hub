@@ -25,6 +25,7 @@ tasks.register('buildJavaExamples') {
 	group = 'examples'
 	description = 'Build all Java lh-server example modules.'
 	dependsOn(
+		':examples:lh-server:java:05-spring-boot:build',
 		':examples:lh-server:java:taskdef-app:build',
 		':examples:lh-server:java:wfspec-app:build'
 	)
