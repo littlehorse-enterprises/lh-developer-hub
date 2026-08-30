@@ -1,24 +1,43 @@
-# 30 Child Threads
+# Customer Onboarding
 
-This standalone Java 21 example shows how one workflow can fan work out to typed child threads and then join them. It demonstrates:
-
-- `spawnThreadForEach()` over a typed `Array<STR>`.
-- Two fixed child threads created with `spawnThread()`.
-- A technical child error handled with `handleErrorOnChild()`.
-- A named business exception handled with `handleExceptionOnChild()`.
-- A graceful worker shutdown hook.
-- Seven-day thread retention and fourteen-day workflow retention.
+This standalone Java 21 example models customer onboarding across several ERP
+systems. It demonstrates dynamic fanout with `spawnThreadForEach()`, human
+remediation with a UserTask, and fixed post-onboarding work with
+`spawnThread()`.
 
 ## Workflow
 
 ```mermaid
 flowchart LR
-    A[items] --> B[spawnThreadForEach]
-    B --> C[waitForThreads]
-    C --> D[handle child error or exception]
-    D --> E[fixed child threads]
-    E --> F[all-children-complete]
+    A[customer] --> B[fetch ERP systems]
+    B --> C[spawnThreadForEach]
+    C --> D[record customer in each ERP]
+    D -->|technical failure| E[IT manual-entry UserTask]
+    D --> F[ERP onboarding complete]
+    F --> G[notify account team]
+    F --> H[provision customer portal]
+    G --> I[customer-onboarding-complete]
+    H --> I
 ```
+
+## Business Scenario
+
+The workflow receives a new customer identifier, fetches the configured ERP
+systems, and records the customer in every system in parallel. A transient ERP
+failure is retried. If an ERP still cannot be updated, an IT support UserTask
+asks a team member to enter the customer manually before onboarding continues.
+
+Once all ERP records are accounted for, two known independent activities run in
+parallel: notifying the account team and provisioning the customer portal.
+
+## Technical Patterns
+
+- `declareArray("erps", String.class)` creates a native LittleHorse `ARRAY`, and `@LHType(isLHArray = true)` keeps the task output in that type instead of `JSON_ARR`.
+- `spawnThreadForEach()` creates one `erp-onboarding` child thread per ERP returned by `fetch-erp-systems`.
+- `handleAnyFailureOnChild()` routes failed ERP work to the `manual-erp-entry-form` UserTask assigned to `it-support`.
+- `spawnThread()` creates the fixed `notify-account-team` and `provision-customer-portal` child threads.
+- `waitForThreads()` joins both dynamic ERP work and fixed post-onboarding work.
+- Seven-day thread retention and fourteen-day workflow retention preserve operational history.
 
 ## Prerequisites
 
@@ -38,43 +57,58 @@ lhctl whoami
 
 ## Run
 
-From this directory:
+From `/home/colt/colt-code/lh-developer-hub`:
 
 ```sh
-../../../../gradlew run
+./gradlew -p examples/lh-server/java/30-child-threads run
 ```
 
-The application registers the task definitions and the `child-threads` WfSpec, then keeps its workers running.
+The application registers the task definitions, manual-entry form, and
+`customer-onboarding` WfSpec, then keeps its workers running.
 
-In another terminal, provide a typed string array as the workflow input:
+Start a workflow in another terminal:
 
 ```sh
-lhctl run child-threads items '["alpha", "beta", "decline", "explode"]'
+lhctl run customer-onboarding customer acme-123
 ```
 
-`decline` takes the named `child-declined` exception path. `explode` makes its task throw a technical failure, which the child failure handler records. The two fixed children run for every workflow run.
+The sample ERP worker intentionally fails for `dynamics`, so the run creates an
+IT support UserTask. Find it with:
+
+```sh
+lhctl search userTaskRun --userGroup it-support --userTaskStatus UNASSIGNED
+```
+
+Assign and complete the task using the identifiers from the search result:
+
+```sh
+lhctl assign userTaskRun <wfRunId> <userTaskGuid> --userId it-operator
+lhctl execute userTaskRun <wfRunId> <userTaskGuid>
+```
+
+Confirm that the customer was entered manually. The two fixed child threads then
+run and the workflow completes.
 
 ## Inspect a Run
-
-Use the workflow run ID printed by `lhctl`:
 
 ```sh
 lhctl get wfRun <wf-run-id>
 lhctl list nodeRun <wf-run-id>
-lhctl get taskRun <wf-run-id> <task-run-global-id>
+lhctl search wfRun byParent <wf-run-id>
 ```
 
-The child thread runs and their join node show that child work completes before the final `all-children-complete` task.
-
-`ChildThreadsExample.getWorkflow()` authors the thread graph during WfSpec registration. `ChildThreadsWorker` executes task methods later as each WfRun and child thread advances.
+The child thread runs and join nodes show the ERP fanout, manual remediation,
+and fixed post-onboarding work.
 
 ## Source Files
 
-- [`ChildThreadsExample.java`](./src/main/java/io/littlehorse/examples/ChildThreadsExample.java) defines fanout, joins, and child failure handlers.
-- [`ChildThreadsWorker.java`](./src/main/java/io/littlehorse/examples/ChildThreadsWorker.java) contains runtime task methods.
+- [`ChildThreadsExample.java`](./src/main/java/io/littlehorse/examples/ChildThreadsExample.java) defines the workflow graph and registration.
+- [`ChildThreadsWorker.java`](./src/main/java/io/littlehorse/examples/ChildThreadsWorker.java) contains ERP and post-onboarding task methods.
+- [`ManualErpEntryForm.java`](./src/main/java/io/littlehorse/examples/ManualErpEntryForm.java) defines the IT remediation form.
 
 ## Common Failure Modes
 
 - `lhctl whoami` fails: the standalone server is not running or `LHC_*` is not configured.
 - A run is stuck at a task: the worker is not running or the task definition was not registered.
-- A child is declined or fails technically: inspect the child node runs and the corresponding parent handler node.
+- A run is waiting on the IT task: assign and complete the `manual-erp-entry-form` UserTask.
+- Multiple workflow starts fail during registration if immutable task definitions from an older version are already registered; use a clean tenant or matching task definitions.

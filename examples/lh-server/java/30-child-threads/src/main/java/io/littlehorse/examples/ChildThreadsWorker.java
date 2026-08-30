@@ -1,39 +1,41 @@
 package io.littlehorse.examples;
 
+import io.littlehorse.sdk.worker.LHType;
 import io.littlehorse.sdk.worker.LHTaskMethod;
 
 public class ChildThreadsWorker {
 
-    @LHTaskMethod("process-item")
-    public String processItem(String item) {
-        if ("explode".equalsIgnoreCase(item)) {
+    @LHTaskMethod("fetch-erp-systems")
+    @LHType(isLHArray = true)
+    public String[] fetchErpSystems() {
+        return new String[] {"sap", "netsuite", "dynamics"};
+    }
+
+    @LHTaskMethod("record-customer-in-erp")
+    public String recordCustomerInErp(String customer, String erpSystem) {
+        if ("dynamics".equalsIgnoreCase(erpSystem)) {
             throw new RuntimeException("Technical failure while processing the item.");
         }
-        return "processed: " + item;
+        return "recorded " + customer + " in " + erpSystem;
     }
 
-    @LHTaskMethod("fixed-child")
-    public String fixedChild(String name) {
-        return "completed: " + name;
+    @LHTaskMethod("notify-account-team")
+    public String notifyAccountTeam(String customer) {
+        return "account team notified for " + customer;
     }
 
-    @LHTaskMethod("record-technical-child-failure")
-    public String recordTechnicalChildFailure() {
-        return "technical child failure handled";
+    @LHTaskMethod("provision-customer-portal")
+    public String provisionCustomerPortal(String customer) {
+        return "portal provisioned for " + customer;
     }
 
-    @LHTaskMethod("record-declined-child")
-    public String recordDeclinedChild() {
-        return "named child exception handled";
+    @LHTaskMethod("record-onboarding-failure")
+    public String recordOnboardingFailure(String customer) {
+        return "onboarding failure recorded for " + customer;
     }
 
-    @LHTaskMethod("record-fixed-child-failure")
-    public String recordFixedChildFailure() {
-        return "fixed child failure handled";
-    }
-
-    @LHTaskMethod("all-children-complete")
-    public String allChildrenComplete() {
-        return "all child work complete";
+    @LHTaskMethod("customer-onboarding-complete")
+    public String customerOnboardingComplete(String customer) {
+        return "customer onboarding complete for " + customer;
     }
 }
