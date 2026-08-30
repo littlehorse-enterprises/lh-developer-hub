@@ -12,6 +12,8 @@ public class ConditionalsExample {
     private static final String WORKFLOW_NAME = "conditionals";
     private static final String RECORD_TASK = "record-request";
     private static final String LARGE_TASK = "route-large";
+    private static final String VALIDATE_LARGE_TASK = "validate-large-request";
+    private static final String NOTIFY_LARGE_TASK = "notify-large-request";
     private static final String EXPEDITED_TASK = "route-expedited";
     private static final String STANDARD_TASK = "route-standard";
     private static final String FINISH_TASK = "finish-request";
@@ -27,7 +29,11 @@ public class ConditionalsExample {
 
                     wf.execute(RECORD_TASK, amount, expedited).withRetries(1);
 
-                    wf.doIf(amount.isGreaterThan(100L), large -> large.execute(LARGE_TASK, amount))
+                    wf.doIf(amount.isGreaterThan(100L), large -> {
+                        large.execute(LARGE_TASK, amount);
+                        large.execute(VALIDATE_LARGE_TASK, amount);
+                        large.execute(NOTIFY_LARGE_TASK, amount);
+                    })
                             .doElseIf(expedited.isEqualTo(true), quick -> quick.execute(EXPEDITED_TASK, amount))
                             .doElse(standard -> standard.execute(STANDARD_TASK, amount));
 
@@ -41,6 +47,8 @@ public class ConditionalsExample {
         return List.of(
                 new LHTaskWorker(tasks, RECORD_TASK, config),
                 new LHTaskWorker(tasks, LARGE_TASK, config),
+                new LHTaskWorker(tasks, VALIDATE_LARGE_TASK, config),
+                new LHTaskWorker(tasks, NOTIFY_LARGE_TASK, config),
                 new LHTaskWorker(tasks, EXPEDITED_TASK, config),
                 new LHTaskWorker(tasks, STANDARD_TASK, config),
                 new LHTaskWorker(tasks, FINISH_TASK, config));

@@ -2,7 +2,7 @@
 
 This standalone Java 21 application registers a workflow with three routing branches. It first records a request, then chooses the first matching branch:
 
-1. `amount > 100` routes to `route-large`.
+1. `amount > 100` routes to `route-large`, then validates and notifies the request.
 2. Otherwise, `expedited == true` routes to `route-expedited`.
 3. Otherwise, `route-standard` runs.
 
@@ -14,10 +14,12 @@ The conditions are LittleHorse expressions evaluated while the workflow runs. Th
 flowchart TD
     A[record-request] --> B{amount > 100?}
     B -->|yes| C[route-large]
+    C --> C2[validate-large-request]
+    C2 --> C3[notify-large-request]
     B -->|no| D{expedited?}
     D -->|yes| E[route-expedited]
     D -->|no| F[route-standard]
-    C --> G[finish-request]
+    C3 --> G[finish-request]
     E --> G
     F --> G
 ```

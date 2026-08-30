@@ -14,6 +14,16 @@ public class ConditionalTasks {
         System.out.println("Routing large request: " + amount);
     }
 
+    @LHTaskMethod("validate-large-request")
+    public void validateLargeRequest(long amount) {
+        System.out.println("Validating large request: " + amount);
+    }
+
+    @LHTaskMethod("notify-large-request")
+    public void notifyLargeRequest(long amount) {
+        System.out.println("Notifying large request owner: " + amount);
+    }
+
     @LHTaskMethod("route-expedited")
     public void routeExpedited(long amount) {
         System.out.println("Routing expedited request: " + amount);
