@@ -6,6 +6,7 @@ import io.littlehorse.sdk.wfsdk.NodeOutput;
 import io.littlehorse.sdk.wfsdk.SpawnedChildWf;
 import io.littlehorse.sdk.wfsdk.WfRunVariable;
 import io.littlehorse.sdk.wfsdk.Workflow;
+import io.littlehorse.sdk.wfsdk.WorkflowThread;
 import io.littlehorse.sdk.worker.LHTaskWorker;
 import java.time.Duration;
 import java.util.Map;
@@ -25,24 +26,20 @@ public final class ChildWorkflowExample {
                 .build());
     }
 
-    public static Workflow childWorkflow() {
-        return configure(Workflow.newWorkflow(CHILD_WF_NAME, wf -> {
-            WfRunVariable childName = wf.declareStr("child-name").required();
-            wf.complete(wf.execute(GREET_TASK, childName));
-        }));
+    public static void childWf(WorkflowThread wf) {
+        WfRunVariable childName = wf.declareStr("child-name").required();
+        wf.complete(wf.execute(GREET_TASK, childName));
     }
 
-    public static Workflow parentWorkflow() {
-        return configure(Workflow.newWorkflow(PARENT_WF_NAME, wf -> {
-            WfRunVariable parentName = wf.declareStr("name").required();
-            WfRunVariable childGreeting = wf.declareStr("child-greeting");
+    public static void parentWf(WorkflowThread wf) {
+        WfRunVariable parentName = wf.declareStr("name").required();
+        WfRunVariable childGreeting = wf.declareStr("child-greeting");
 
-            // runWf starts the child; waitForChildWf consumes its eventual output.
-            SpawnedChildWf child = wf.runWf(CHILD_WF_NAME, Map.of("child-name", parentName));
-            NodeOutput childOutput = wf.waitForChildWf(child);
-            childGreeting.assign(childOutput);
-            wf.complete(wf.execute(GREET_TASK, childGreeting));
-        }));
+        // runWf starts the child; waitForChildWf consumes its eventual output.
+        SpawnedChildWf child = wf.runWf(CHILD_WF_NAME, Map.of("child-name", parentName));
+        NodeOutput childOutput = wf.waitForChildWf(child);
+        childGreeting.assign(childOutput);
+        wf.complete(wf.execute(GREET_TASK, childGreeting));
     }
 
     public static void main(String[] args) {
@@ -52,8 +49,10 @@ public final class ChildWorkflowExample {
         worker.registerTaskDef();
 
         // The child WfSpec is registered before the parent references it.
-        childWorkflow().registerWfSpec(config);
-        parentWorkflow().registerWfSpec(config);
+        Workflow childWorkflow = configure(Workflow.newWorkflow(CHILD_WF_NAME, ChildWorkflowExample::childWf));
+        Workflow parentWorkflow = configure(Workflow.newWorkflow(PARENT_WF_NAME, ChildWorkflowExample::parentWf));
+        childWorkflow.registerWfSpec(config);
+        parentWorkflow.registerWfSpec(config);
 
         Runtime.getRuntime().addShutdownHook(new Thread(worker::close));
         worker.start();

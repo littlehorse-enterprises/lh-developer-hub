@@ -10,6 +10,8 @@ import io.littlehorse.sdk.common.proto.RunWfRequest;
 import io.littlehorse.sdk.common.proto.TypeDefinition;
 import io.littlehorse.sdk.common.proto.VariableType;
 import io.littlehorse.sdk.common.proto.WfRun;
+import io.littlehorse.sdk.common.proto.WorkflowRetentionPolicy;
+import io.littlehorse.sdk.wfsdk.Workflow;
 import io.littlehorse.sdk.worker.LHTaskWorker;
 import java.util.List;
 
@@ -28,7 +30,11 @@ public class QuickstartApplication {
 
         registerIdentityVerifiedEvent(client);
         workers.forEach(LHTaskWorker::registerTaskDef);
-        QuickstartWorkflow.build().registerWfSpec(client);
+        Workflow workflow = Workflow.newWorkflow(QuickstartWorkflow.WF_SPEC_NAME, QuickstartWorkflow::wfLogic)
+                .withRetentionPolicy(WorkflowRetentionPolicy.newBuilder()
+                        .setSecondsAfterWfTermination(14 * 24 * 60 * 60L)
+                        .build());
+        workflow.registerWfSpec(client);
         workers.forEach(LHTaskWorker::start);
 
         WfRun sample = client.runWf(RunWfRequest.newBuilder()

@@ -7,6 +7,7 @@ import io.littlehorse.sdk.usertask.UserTaskSchema;
 import io.littlehorse.sdk.wfsdk.UserTaskOutput;
 import io.littlehorse.sdk.wfsdk.WfRunVariable;
 import io.littlehorse.sdk.wfsdk.Workflow;
+import io.littlehorse.sdk.wfsdk.WorkflowThread;
 import io.littlehorse.sdk.worker.LHTaskWorker;
 import java.time.Duration;
 
@@ -29,22 +30,21 @@ public final class UserTasksExample {
                 .build());
     }
 
-    public static Workflow workflow() {
-        return configure(Workflow.newWorkflow(WF_NAME, wf -> {
-            WfRunVariable userId = wf.declareStr("user-id").required();
-            WfRunVariable request = wf.declareJsonObj("request");
-            WfRunVariable approved = wf.declareBool("approved");
+    public static void wfLogic(WorkflowThread wf) {
+        WfRunVariable userId = wf.declareStr("user-id").required();
+        WfRunVariable request = wf.declareJsonObj("request");
+        WfRunVariable approved = wf.declareBool("approved");
 
-            UserTaskOutput requestTask = wf.assignUserTask(REQUEST_FORM, userId, REQUESTER_GROUP);
+        UserTaskOutput requestTask = wf.assignUserTask(REQUEST_FORM, userId, REQUESTER_GROUP);
             wf.releaseToGroupOnDeadline(requestTask, 60);
             requestTask.withOnCancellationException(REQUEST_CANCELLED);
             wf.handleException(requestTask, REQUEST_CANCELLED, handler -> handler.execute(
                     NotificationTasks.SEND_EMAIL_TASK,
                     userId,
                     "The purchase request was cancelled."));
-            request.assign(requestTask);
+        request.assign(requestTask);
 
-            UserTaskOutput approvalTask = wf.assignUserTask(APPROVAL_FORM, null, FINANCE_GROUP)
+        UserTaskOutput approvalTask = wf.assignUserTask(APPROVAL_FORM, null, FINANCE_GROUP)
                     .withNotes(wf.format(
                             "User {0} requested {1}: {2}",
                             userId,
@@ -63,9 +63,9 @@ public final class UserTasksExample {
                     NotificationTasks.SEND_EMAIL_TASK,
                     userId,
                     "The purchase approval expired or was cancelled."));
-            approved.assign(approvalTask.jsonPath("$.approved"));
+        approved.assign(approvalTask.jsonPath("$.approved"));
 
-            wf.doIf(
+        wf.doIf(
                             approved.isEqualTo(true),
                             yes -> yes.execute(
                                     NotificationTasks.SEND_EMAIL_TASK,
@@ -75,8 +75,7 @@ public final class UserTasksExample {
                             NotificationTasks.SEND_EMAIL_TASK,
                             userId,
                             wf.format("Denied: {0}", request.jsonPath("$.requestedItem"))));
-            wf.complete();
-        }));
+        wf.complete();
     }
 
     public static void main(String[] args) {
@@ -90,7 +89,8 @@ public final class UserTasksExample {
         // UserTaskDefs must exist before the WfSpec references their forms.
         client.putUserTaskDef(new UserTaskSchema(new ItemRequestForm(), REQUEST_FORM).compile());
         client.putUserTaskDef(new UserTaskSchema(new ApprovalForm(), APPROVAL_FORM).compile());
-        workflow().registerWfSpec(config);
+        Workflow workflow = configure(Workflow.newWorkflow(WF_NAME, UserTasksExample::wfLogic));
+        workflow.registerWfSpec(config);
 
         Runtime.getRuntime().addShutdownHook(new Thread(worker::close));
         worker.start();

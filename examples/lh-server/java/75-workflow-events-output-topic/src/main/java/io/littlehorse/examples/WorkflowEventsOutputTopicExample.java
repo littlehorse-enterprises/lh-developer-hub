@@ -9,6 +9,7 @@ import io.littlehorse.sdk.common.proto.PutTenantRequest;
 import io.littlehorse.sdk.common.proto.WorkflowEvent;
 import io.littlehorse.sdk.common.proto.WorkflowRetentionPolicy;
 import io.littlehorse.sdk.wfsdk.Workflow;
+import io.littlehorse.sdk.wfsdk.WorkflowThread;
 import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
@@ -30,16 +31,11 @@ public final class WorkflowEventsOutputTopicExample {
         return value == null || value.isBlank() ? defaultValue : value;
     }
 
-    private static Workflow workflow() {
-        Workflow workflow = Workflow.newWorkflow(WF_NAME, wf -> {
-            var shipmentId = wf.declareStr("shipment-id").required();
-            wf.throwEvent(EVENT_NAME, wf.format("Shipment {0} is ready", shipmentId))
-                    .registeredAs(String.class);
-            wf.complete();
-        });
-        return workflow.withRetentionPolicy(WorkflowRetentionPolicy.newBuilder()
-                .setSecondsAfterWfTermination(Duration.ofDays(14).toSeconds())
-                .build());
+    public static void wfLogic(WorkflowThread wf) {
+        var shipmentId = wf.declareStr("shipment-id").required();
+        wf.throwEvent(EVENT_NAME, wf.format("Shipment {0} is ready", shipmentId))
+                .registeredAs(String.class);
+        wf.complete();
     }
 
     private static Properties kafkaProperties(String groupId) {
@@ -89,7 +85,11 @@ public final class WorkflowEventsOutputTopicExample {
                 .setId(tenantId)
                 .setOutputTopicConfig(OutputTopicConfig.newBuilder().build())
                 .build());
-        workflow().registerWfSpec(config);
+        Workflow workflow = Workflow.newWorkflow(WF_NAME, WorkflowEventsOutputTopicExample::wfLogic)
+                .withRetentionPolicy(WorkflowRetentionPolicy.newBuilder()
+                        .setSecondsAfterWfTermination(Duration.ofDays(14).toSeconds())
+                        .build());
+        workflow.registerWfSpec(config);
 
         System.out.printf(
                 "Listening for WORKFLOW_EVENT records on %s via %s (tenant %s).%n",

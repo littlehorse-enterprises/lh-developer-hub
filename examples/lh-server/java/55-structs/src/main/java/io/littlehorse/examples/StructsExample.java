@@ -8,6 +8,7 @@ import io.littlehorse.sdk.wfsdk.LHStructBuilder;
 import io.littlehorse.sdk.wfsdk.NodeOutput;
 import io.littlehorse.sdk.wfsdk.WfRunVariable;
 import io.littlehorse.sdk.wfsdk.Workflow;
+import io.littlehorse.sdk.wfsdk.WorkflowThread;
 import io.littlehorse.sdk.worker.LHTaskWorker;
 import java.util.List;
 import org.slf4j.Logger;
@@ -21,20 +22,19 @@ public final class StructsExample {
 
     private StructsExample() {}
 
-    public static Workflow buildWorkflow() {
-        Workflow workflow = Workflow.newWorkflow(WF_SPEC_NAME, wf -> {
-            WfRunVariable customerId = wf.declareStr("customer-id").required();
-            WfRunVariable orderId = wf.declareStr("order-id").required();
-            WfRunVariable sku = wf.declareStr("sku").required();
-            WfRunVariable quantity = wf.declareInt("quantity").required();
+    public static void wfLogic(WorkflowThread wf) {
+        WfRunVariable customerId = wf.declareStr("customer-id").required();
+        WfRunVariable orderId = wf.declareStr("order-id").required();
+        WfRunVariable sku = wf.declareStr("sku").required();
+        WfRunVariable quantity = wf.declareInt("quantity").required();
 
-            WfRunVariable customer = wf.declareStruct("customer", CustomerProfile.class);
-            WfRunVariable order = wf.declareStruct("order", PurchaseOrder.class);
+        WfRunVariable customer = wf.declareStruct("customer", CustomerProfile.class);
+        WfRunVariable order = wf.declareStruct("order", PurchaseOrder.class);
 
-            NodeOutput addressOutput = wf.execute("lookup-address", customerId);
-            NodeOutput normalizedAddress = wf.execute("normalize-address", addressOutput);
+        NodeOutput addressOutput = wf.execute("lookup-address", customerId);
+        NodeOutput normalizedAddress = wf.execute("normalize-address", addressOutput);
 
-            LHStructBuilder customerValue = wf.buildStruct("customer-profile")
+        LHStructBuilder customerValue = wf.buildStruct("customer-profile")
                     .put("customerId", customerId)
                     .put("displayName", wf.format("Customer {0}", customerId))
                     .put(
@@ -44,29 +44,21 @@ public final class StructsExample {
                                     .put("city", normalizedAddress.get("city"))
                                     .put("state", normalizedAddress.get("state"))
                                     .put("postalCode", normalizedAddress.get("postalCode")));
-            customer.assign(customerValue);
+        customer.assign(customerValue);
 
             // WfRunVariable.get() addresses nested fields without evaluating them in Java.
-            wf.execute("audit-customer", customer.get("displayName"), customer.get("address").get("city"));
+        wf.execute("audit-customer", customer.get("displayName"), customer.get("address").get("city"));
 
-            LHStructBuilder orderValue = wf.buildStruct("purchase-order")
+        LHStructBuilder orderValue = wf.buildStruct("purchase-order")
                     .put("orderId", orderId)
                     .put("customer", customer)
                     .put(
                             "lineItem",
                             wf.buildInlineStruct().put("sku", sku).put("quantity", quantity));
-            order.assign(orderValue);
+        order.assign(orderValue);
 
-            wf.execute("save-order", order);
-            wf.complete(order.get("orderId"));
-        });
-
-        return workflow.withRetentionPolicy(WorkflowRetentionPolicy.newBuilder()
-                        .setSecondsAfterWfTermination(24 * 60 * 60L)
-                        .build())
-                .withDefaultThreadRetentionPolicy(ThreadRetentionPolicy.newBuilder()
-                        .setSecondsAfterThreadTermination(60 * 60L)
-                        .build());
+        wf.execute("save-order", order);
+        wf.complete(order.get("orderId"));
     }
 
     public static List<LHTaskWorker> createWorkers(LHConfig config) {
@@ -100,7 +92,14 @@ public final class StructsExample {
 
         registerStructDefs(workers.get(0));
         workers.forEach(LHTaskWorker::registerTaskDef);
-        buildWorkflow().registerWfSpec(config);
+        Workflow workflow = Workflow.newWorkflow(WF_SPEC_NAME, StructsExample::wfLogic)
+                .withRetentionPolicy(WorkflowRetentionPolicy.newBuilder()
+                        .setSecondsAfterWfTermination(24 * 60 * 60L)
+                        .build())
+                .withDefaultThreadRetentionPolicy(ThreadRetentionPolicy.newBuilder()
+                        .setSecondsAfterThreadTermination(60 * 60L)
+                        .build());
+        workflow.registerWfSpec(config);
         workers.forEach(LHTaskWorker::start);
     }
 }

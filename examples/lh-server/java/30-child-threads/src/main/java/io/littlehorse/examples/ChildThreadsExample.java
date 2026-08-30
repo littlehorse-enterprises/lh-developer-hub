@@ -20,11 +20,10 @@ public final class ChildThreadsExample {
 
     private ChildThreadsExample() {}
 
-    public static Workflow getWorkflow() {
-        Workflow workflow = Workflow.newWorkflow(WORKFLOW_NAME, wf -> {
-            WfRunVariable items = wf.declareArray("items", String.class).required();
+    public static void wfLogic(WorkflowThread wf) {
+        WfRunVariable items = wf.declareArray("items", String.class).required();
 
-            SpawnedThreads foreachChildren = wf.spawnThreadForEach(
+        SpawnedThreads foreachChildren = wf.spawnThreadForEach(
                     items,
                     "foreach-child",
                     child -> {
@@ -35,34 +34,26 @@ public final class ChildThreadsExample {
                     },
                     Map.of());
 
-            WaitForThreadsNodeOutput foreachJoin = wf.waitForThreads(foreachChildren);
-            foreachJoin.handleErrorOnChild(
-                    LHErrorType.TASK_FAILURE,
-                    handler -> handler.execute("record-technical-child-failure"));
-            foreachJoin.handleExceptionOnChild(
-                    "child-declined", handler -> handler.execute("record-declined-child"));
+        WaitForThreadsNodeOutput foreachJoin = wf.waitForThreads(foreachChildren);
+        foreachJoin.handleErrorOnChild(
+                LHErrorType.TASK_FAILURE,
+                handler -> handler.execute("record-technical-child-failure"));
+        foreachJoin.handleExceptionOnChild(
+                "child-declined", handler -> handler.execute("record-declined-child"));
 
-            SpawnedThread firstFixedChild = wf.spawnThread(
+        SpawnedThread firstFixedChild = wf.spawnThread(
                     child -> child.execute("fixed-child", "fixed-child-one"),
                     "fixed-child-one",
                     Map.of());
-            SpawnedThread secondFixedChild = wf.spawnThread(
+        SpawnedThread secondFixedChild = wf.spawnThread(
                     child -> child.execute("fixed-child", "fixed-child-two"),
                     "fixed-child-two",
                     Map.of());
-            WaitForThreadsNodeOutput fixedJoin =
-                    wf.waitForThreads(SpawnedThreads.of(firstFixedChild, secondFixedChild));
-            fixedJoin.handleAnyFailureOnChild(handler -> handler.execute("record-fixed-child-failure"));
+        WaitForThreadsNodeOutput fixedJoin =
+                wf.waitForThreads(SpawnedThreads.of(firstFixedChild, secondFixedChild));
+        fixedJoin.handleAnyFailureOnChild(handler -> handler.execute("record-fixed-child-failure"));
 
-            wf.complete(wf.execute("all-children-complete"));
-        });
-
-        return workflow.withRetentionPolicy(WorkflowRetentionPolicy.newBuilder()
-                        .setSecondsAfterWfTermination(14 * 24 * 60 * 60L)
-                        .build())
-                .withDefaultThreadRetentionPolicy(ThreadRetentionPolicy.newBuilder()
-                        .setSecondsAfterThreadTermination(7 * 24 * 60 * 60L)
-                        .build());
+        wf.complete(wf.execute("all-children-complete"));
     }
 
     private static List<LHTaskWorker> getTaskWorkers(LHConfig config) {
@@ -82,7 +73,14 @@ public final class ChildThreadsExample {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> workers.forEach(LHTaskWorker::close)));
 
         workers.forEach(LHTaskWorker::registerTaskDef);
-        getWorkflow().registerWfSpec(config.getBlockingStub());
+        Workflow workflow = Workflow.newWorkflow(WORKFLOW_NAME, ChildThreadsExample::wfLogic)
+                .withRetentionPolicy(WorkflowRetentionPolicy.newBuilder()
+                        .setSecondsAfterWfTermination(14 * 24 * 60 * 60L)
+                        .build())
+                .withDefaultThreadRetentionPolicy(ThreadRetentionPolicy.newBuilder()
+                        .setSecondsAfterThreadTermination(7 * 24 * 60 * 60L)
+                        .build());
+        workflow.registerWfSpec(config.getBlockingStub());
         workers.forEach(LHTaskWorker::start);
     }
 }

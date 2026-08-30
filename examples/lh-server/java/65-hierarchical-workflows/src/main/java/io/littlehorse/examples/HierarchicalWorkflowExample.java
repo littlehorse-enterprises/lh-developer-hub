@@ -5,6 +5,7 @@ import io.littlehorse.sdk.common.proto.WorkflowRetentionPolicy;
 import io.littlehorse.sdk.wfsdk.NodeOutput;
 import io.littlehorse.sdk.wfsdk.WfRunVariable;
 import io.littlehorse.sdk.wfsdk.Workflow;
+import io.littlehorse.sdk.wfsdk.WorkflowThread;
 import io.littlehorse.sdk.worker.LHTaskWorker;
 import java.time.Duration;
 
@@ -24,31 +25,21 @@ public final class HierarchicalWorkflowExample {
                 .build());
     }
 
-    public static Workflow parentWorkflow() {
-        return configure(Workflow.newWorkflow(PARENT_WF_NAME, wf -> {
-            WfRunVariable name = wf.declareStr("name").required().asPublic();
-            wf.complete(wf.execute(GREET_TASK, name));
-        }));
+    public static void parentWf(WorkflowThread wf) {
+        WfRunVariable name = wf.declareStr("name").required().asPublic();
+        wf.complete(wf.execute(GREET_TASK, name));
     }
 
-    public static Workflow childWorkflow() {
-        Workflow workflow = configure(Workflow.newWorkflow(CHILD_WF_NAME, wf -> {
-            WfRunVariable name = wf.declareStr("name").asInherited();
-            NodeOutput greeting = wf.execute(GREET_TASK, name);
-            name.assign("updated-by-child");
-            wf.complete(greeting);
-        }));
-        workflow.setParent(PARENT_WF_NAME);
-        return workflow;
+    public static void childWf(WorkflowThread wf) {
+        WfRunVariable name = wf.declareStr("name").asInherited();
+        NodeOutput greeting = wf.execute(GREET_TASK, name);
+        name.assign("updated-by-child");
+        wf.complete(greeting);
     }
 
-    public static Workflow grandchildWorkflow() {
-        Workflow workflow = configure(Workflow.newWorkflow(GRANDCHILD_WF_NAME, wf -> {
-            WfRunVariable name = wf.declareStr("name").asInherited();
-            wf.complete(wf.execute(GREET_TASK, name));
-        }));
-        workflow.setParent(CHILD_WF_NAME);
-        return workflow;
+    public static void grandchildWf(WorkflowThread wf) {
+        WfRunVariable name = wf.declareStr("name").asInherited();
+        wf.complete(wf.execute(GREET_TASK, name));
     }
 
     public static void main(String[] args) {
@@ -58,9 +49,15 @@ public final class HierarchicalWorkflowExample {
         worker.registerTaskDef();
 
         // Parent metadata must exist before a WfSpec can refer to it.
-        parentWorkflow().registerWfSpec(config);
-        childWorkflow().registerWfSpec(config);
-        grandchildWorkflow().registerWfSpec(config);
+        Workflow parentWorkflow = configure(Workflow.newWorkflow(PARENT_WF_NAME, HierarchicalWorkflowExample::parentWf));
+        Workflow childWorkflow = configure(Workflow.newWorkflow(CHILD_WF_NAME, HierarchicalWorkflowExample::childWf));
+        childWorkflow.setParent(PARENT_WF_NAME);
+        Workflow grandchildWorkflow = configure(
+                Workflow.newWorkflow(GRANDCHILD_WF_NAME, HierarchicalWorkflowExample::grandchildWf));
+        grandchildWorkflow.setParent(CHILD_WF_NAME);
+        parentWorkflow.registerWfSpec(config);
+        childWorkflow.registerWfSpec(config);
+        grandchildWorkflow.registerWfSpec(config);
 
         Runtime.getRuntime().addShutdownHook(new Thread(worker::close));
         worker.start();

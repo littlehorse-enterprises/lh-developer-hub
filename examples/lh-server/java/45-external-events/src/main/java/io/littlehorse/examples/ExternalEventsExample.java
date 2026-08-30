@@ -13,6 +13,7 @@ import io.littlehorse.sdk.common.proto.WfRun;
 import io.littlehorse.sdk.wfsdk.ExternalEventNodeOutput;
 import io.littlehorse.sdk.wfsdk.Workflow;
 import io.littlehorse.sdk.wfsdk.WfRunVariable;
+import io.littlehorse.sdk.wfsdk.WorkflowThread;
 import io.littlehorse.sdk.worker.LHTaskWorker;
 import java.util.List;
 
@@ -24,36 +25,27 @@ public final class ExternalEventsExample {
 
     private ExternalEventsExample() {}
 
-    public static Workflow getWorkflow() {
-        Workflow workflow = Workflow.newWorkflow(WORKFLOW_NAME, wf -> {
-            WfRunVariable orderId = wf.declareStr("order-id").required();
-            ExternalEventNodeOutput event = wf.waitForEvent(EVENT_NAME)
-                    .timeout(EVENT_TIMEOUT_SECONDS)
-                    .withCorrelationId(orderId, true)
-                    .withCorrelatedEventConfig(CorrelatedEventConfig.newBuilder()
-                            .setDeleteAfterFirstCorrelation(true)
-                            .build())
-                    .registeredAs(Boolean.class);
+    public static void wfLogic(WorkflowThread wf) {
+        WfRunVariable orderId = wf.declareStr("order-id").required();
+        ExternalEventNodeOutput event = wf.waitForEvent(EVENT_NAME)
+                .timeout(EVENT_TIMEOUT_SECONDS)
+                .withCorrelationId(orderId, true)
+                .withCorrelatedEventConfig(CorrelatedEventConfig.newBuilder()
+                        .setDeleteAfterFirstCorrelation(true)
+                        .build())
+                .registeredAs(Boolean.class);
 
-            wf.handleError(event, LHErrorType.TIMEOUT, handler -> {
-                handler.execute("record-timeout", orderId);
-                handler.fail("approval-timeout", "The approval event did not arrive before the timeout.");
-            });
-
-            WfRunVariable approved = wf.declareBool("approved");
-            approved.assign(event);
-            wf.doIf(approved.isEqualTo(true), yes -> yes.execute("record-approved", orderId))
-                    .doElse(no -> no.execute("record-rejected", orderId));
-
-            wf.complete(wf.execute("semantic-result", approved, orderId));
+        wf.handleError(event, LHErrorType.TIMEOUT, handler -> {
+            handler.execute("record-timeout", orderId);
+            handler.fail("approval-timeout", "The approval event did not arrive before the timeout.");
         });
 
-        return workflow.withRetentionPolicy(WorkflowRetentionPolicy.newBuilder()
-                        .setSecondsAfterWfTermination(14 * 24 * 60 * 60L)
-                        .build())
-                .withDefaultThreadRetentionPolicy(ThreadRetentionPolicy.newBuilder()
-                        .setSecondsAfterThreadTermination(7 * 24 * 60 * 60L)
-                        .build());
+        WfRunVariable approved = wf.declareBool("approved");
+        approved.assign(event);
+        wf.doIf(approved.isEqualTo(true), yes -> yes.execute("record-approved", orderId))
+                .doElse(no -> no.execute("record-rejected", orderId));
+
+        wf.complete(wf.execute("semantic-result", approved, orderId));
     }
 
     private static List<LHTaskWorker> getTaskWorkers(LHConfig config) {
@@ -86,7 +78,14 @@ public final class ExternalEventsExample {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> workers.forEach(LHTaskWorker::close)));
 
         workers.forEach(LHTaskWorker::registerTaskDef);
-        getWorkflow().registerWfSpec(config.getBlockingStub());
+        Workflow workflow = Workflow.newWorkflow(WORKFLOW_NAME, ExternalEventsExample::wfLogic)
+                .withRetentionPolicy(WorkflowRetentionPolicy.newBuilder()
+                        .setSecondsAfterWfTermination(14 * 24 * 60 * 60L)
+                        .build())
+                .withDefaultThreadRetentionPolicy(ThreadRetentionPolicy.newBuilder()
+                        .setSecondsAfterThreadTermination(7 * 24 * 60 * 60L)
+                        .build());
+        workflow.registerWfSpec(config.getBlockingStub());
 
         String beforeRunKey = args.length > 0 ? args[0] : "before-run-demo-" + System.currentTimeMillis();
         String afterRunKey = args.length > 1 ? args[1] : "after-run-demo-" + System.currentTimeMillis();

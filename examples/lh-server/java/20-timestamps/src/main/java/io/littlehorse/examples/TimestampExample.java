@@ -5,6 +5,7 @@ import io.littlehorse.sdk.common.proto.WorkflowRetentionPolicy;
 import io.littlehorse.sdk.wfsdk.NodeOutput;
 import io.littlehorse.sdk.wfsdk.WfRunVariable;
 import io.littlehorse.sdk.wfsdk.Workflow;
+import io.littlehorse.sdk.wfsdk.WorkflowThread;
 import io.littlehorse.sdk.worker.LHTaskWorker;
 import java.util.List;
 
@@ -18,14 +19,11 @@ public class TimestampExample {
             .setSecondsAfterWfTermination(3600)
             .build();
 
-    public static Workflow getWorkflow() {
-        return Workflow.newWorkflow(WORKFLOW_NAME, wf -> {
-                    WfRunVariable eventTime = wf.declareTimestamp("event-time").required();
+    public static void wfLogic(WorkflowThread wf) {
+        WfRunVariable eventTime = wf.declareTimestamp("event-time").required();
 
-                    NodeOutput formattedTime = wf.execute(FORMAT_TASK, eventTime).withRetries(2);
-                    wf.execute(PRINT_TASK, formattedTime);
-                })
-                .withRetentionPolicy(RETENTION_POLICY);
+        NodeOutput formattedTime = wf.execute(FORMAT_TASK, eventTime).withRetries(2);
+        wf.execute(PRINT_TASK, formattedTime);
     }
 
     public static List<LHTaskWorker> getTaskWorkers(LHConfig config) {
@@ -37,7 +35,8 @@ public class TimestampExample {
 
     public static void main(String[] args) {
         LHConfig config = new LHConfig();
-        Workflow workflow = getWorkflow();
+        Workflow workflow = Workflow.newWorkflow(WORKFLOW_NAME, TimestampExample::wfLogic)
+                .withRetentionPolicy(RETENTION_POLICY);
         List<LHTaskWorker> workers = getTaskWorkers(config);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> workers.forEach(LHTaskWorker::close)));

@@ -4,7 +4,7 @@ import io.littlehorse.sdk.common.proto.LHErrorType;
 import io.littlehorse.sdk.common.proto.WorkflowRetentionPolicy;
 import io.littlehorse.sdk.wfsdk.NodeOutput;
 import io.littlehorse.sdk.wfsdk.WfRunVariable;
-import io.littlehorse.sdk.wfsdk.Workflow;
+import io.littlehorse.sdk.wfsdk.WorkflowThread;
 
 public final class QuickstartWorkflow {
 
@@ -16,33 +16,26 @@ public final class QuickstartWorkflow {
 
     private QuickstartWorkflow() {}
 
-    public static Workflow build() {
-        Workflow workflow = Workflow.newWorkflow(WF_SPEC_NAME, wf -> {
-            WfRunVariable fullName = wf.declareStr("full-name").required().searchable();
-            WfRunVariable email = wf.declareStr("email").required().searchable();
-            WfRunVariable ssn = wf.declareInt("ssn").required().masked();
-            WfRunVariable identityVerified = wf.declareBool("identity-verified").searchable();
+    public static void wfLogic(WorkflowThread wf) {
+        WfRunVariable fullName = wf.declareStr("full-name").required().searchable();
+        WfRunVariable email = wf.declareStr("email").required().searchable();
+        WfRunVariable ssn = wf.declareInt("ssn").required().masked();
+        WfRunVariable identityVerified = wf.declareBool("identity-verified").searchable();
 
-            wf.execute(VERIFY_IDENTITY_TASK, fullName, email, ssn).withRetries(3);
+        wf.execute(VERIFY_IDENTITY_TASK, fullName, email, ssn).withRetries(3);
 
-            NodeOutput verification = wf.waitForEvent(IDENTITY_VERIFIED_EVENT)
-                    .timeout(300)
-                    .withCorrelationId(email, true)
-                    .registeredAs(Boolean.class);
+        NodeOutput verification = wf.waitForEvent(IDENTITY_VERIFIED_EVENT)
+                .timeout(300)
+                .withCorrelationId(email, true)
+                .registeredAs(Boolean.class);
 
-            wf.handleError(verification, LHErrorType.TIMEOUT, handler -> {
-                handler.execute(NOTIFY_NOT_VERIFIED_TASK, fullName, email);
-                handler.fail("identity-verification-timeout", "Identity verification timed out.");
-            });
-
-            identityVerified.assign(verification);
-            wf.doIf(identityVerified.isEqualTo(true), yes -> yes.execute(NOTIFY_VERIFIED_TASK, fullName, email))
-                    .doElse(no -> no.execute(NOTIFY_NOT_VERIFIED_TASK, fullName, email));
+        wf.handleError(verification, LHErrorType.TIMEOUT, handler -> {
+            handler.execute(NOTIFY_NOT_VERIFIED_TASK, fullName, email);
+            handler.fail("identity-verification-timeout", "Identity verification timed out.");
         });
 
-        workflow.withRetentionPolicy(WorkflowRetentionPolicy.newBuilder()
-                .setSecondsAfterWfTermination(14 * 24 * 60 * 60L)
-                .build());
-        return workflow;
+        identityVerified.assign(verification);
+        wf.doIf(identityVerified.isEqualTo(true), yes -> yes.execute(NOTIFY_VERIFIED_TASK, fullName, email))
+                .doElse(no -> no.execute(NOTIFY_NOT_VERIFIED_TASK, fullName, email));
     }
 }

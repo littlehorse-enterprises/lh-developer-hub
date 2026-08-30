@@ -4,6 +4,7 @@ import io.littlehorse.sdk.common.config.LHConfig;
 import io.littlehorse.sdk.common.proto.WorkflowRetentionPolicy;
 import io.littlehorse.sdk.wfsdk.WfRunVariable;
 import io.littlehorse.sdk.wfsdk.Workflow;
+import io.littlehorse.sdk.wfsdk.WorkflowThread;
 import io.littlehorse.sdk.worker.LHTaskWorker;
 import java.util.List;
 
@@ -22,24 +23,21 @@ public class ConditionalsExample {
             .setSecondsAfterWfTermination(3600)
             .build();
 
-    public static Workflow getWorkflow() {
-        return Workflow.newWorkflow(WORKFLOW_NAME, wf -> {
-                    WfRunVariable amount = wf.declareInt("amount").required();
-                    WfRunVariable expedited = wf.declareBool("expedited").required();
+    public static void wfLogic(WorkflowThread wf) {
+        WfRunVariable amount = wf.declareInt("amount").required();
+        WfRunVariable expedited = wf.declareBool("expedited").required();
 
-                    wf.execute(RECORD_TASK, amount, expedited).withRetries(1);
+        wf.execute(RECORD_TASK, amount, expedited).withRetries(1);
 
-                    wf.doIf(amount.isGreaterThan(100L), large -> {
-                        large.execute(LARGE_TASK, amount);
-                        large.execute(VALIDATE_LARGE_TASK, amount);
-                        large.execute(NOTIFY_LARGE_TASK, amount);
-                    })
-                            .doElseIf(expedited.isEqualTo(true), quick -> quick.execute(EXPEDITED_TASK, amount))
-                            .doElse(standard -> standard.execute(STANDARD_TASK, amount));
+        wf.doIf(amount.isGreaterThan(100L), large -> {
+            large.execute(LARGE_TASK, amount);
+            large.execute(VALIDATE_LARGE_TASK, amount);
+            large.execute(NOTIFY_LARGE_TASK, amount);
+        })
+                .doElseIf(expedited.isEqualTo(true), quick -> quick.execute(EXPEDITED_TASK, amount))
+                .doElse(standard -> standard.execute(STANDARD_TASK, amount));
 
-                    wf.execute(FINISH_TASK).withRetries(1);
-                })
-                .withRetentionPolicy(RETENTION_POLICY);
+        wf.execute(FINISH_TASK).withRetries(1);
     }
 
     public static List<LHTaskWorker> getTaskWorkers(LHConfig config) {
@@ -56,7 +54,8 @@ public class ConditionalsExample {
 
     public static void main(String[] args) {
         LHConfig config = new LHConfig();
-        Workflow workflow = getWorkflow();
+        Workflow workflow = Workflow.newWorkflow(WORKFLOW_NAME, ConditionalsExample::wfLogic)
+                .withRetentionPolicy(RETENTION_POLICY);
         List<LHTaskWorker> workers = getTaskWorkers(config);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> workers.forEach(LHTaskWorker::close)));

@@ -28,24 +28,21 @@ public class TaskFailuresExample {
             .setSecondsAfterWfTermination(3600)
             .build();
 
-    public static Workflow getWorkflow() {
-        return Workflow.newWorkflow(WORKFLOW_NAME, wf -> {
-                    WfRunVariable scenario = wf.declareStr("scenario").required();
-                    NodeOutput operation = wf.execute(OPERATION_TASK, scenario).withRetries(1);
+    public static void wfLogic(WorkflowThread wf) {
+        WfRunVariable scenario = wf.declareStr("scenario").required();
+        NodeOutput operation = wf.execute(OPERATION_TASK, scenario).withRetries(1);
 
-                    wf.handleError(operation, handler -> handler.execute(RECOVER_TECHNICAL_TASK));
-                    wf.handleException(operation, BUSINESS_EXCEPTION_NAME, handler -> {
-                        WfRunVariable content = handler.declareStr(WorkflowThread.HANDLER_INPUT_VAR);
-                        handler.execute(
-                                RECOVER_BUSINESS_TASK,
-                                BUSINESS_EXCEPTION_NAME,
-                                BUSINESS_EXCEPTION_MESSAGE,
-                                content);
-                    });
+        wf.handleError(operation, handler -> handler.execute(RECOVER_TECHNICAL_TASK));
+        wf.handleException(operation, BUSINESS_EXCEPTION_NAME, handler -> {
+            WfRunVariable content = handler.declareStr(WorkflowThread.HANDLER_INPUT_VAR);
+            handler.execute(
+                    RECOVER_BUSINESS_TASK,
+                    BUSINESS_EXCEPTION_NAME,
+                    BUSINESS_EXCEPTION_MESSAGE,
+                    content);
+        });
 
-                    wf.execute(FINISH_TASK, scenario).withRetries(1);
-                })
-                .withRetentionPolicy(RETENTION_POLICY);
+        wf.execute(FINISH_TASK, scenario).withRetries(1);
     }
 
     public static List<LHTaskWorker> getTaskWorkers(LHConfig config) {
@@ -59,7 +56,8 @@ public class TaskFailuresExample {
 
     public static void main(String[] args) {
         LHConfig config = new LHConfig();
-        Workflow workflow = getWorkflow();
+        Workflow workflow = Workflow.newWorkflow(WORKFLOW_NAME, TaskFailuresExample::wfLogic)
+                .withRetentionPolicy(RETENTION_POLICY);
         List<LHTaskWorker> workers = getTaskWorkers(config);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> workers.forEach(LHTaskWorker::close)));
