@@ -1,4 +1,4 @@
-# Interrupts
+# 50 Interrupts
 
 This example demonstrates interrupt handlers that receive typed primitive payloads, mutate state in the interrupted parent thread, and unblock a `waitForCondition` node.
 
@@ -24,10 +24,22 @@ Each handler declares its payload as `WorkflowThread.HANDLER_INPUT_VAR`. The han
 
 After the condition is satisfied, the workflow reports the final status and completes. The workflow retains completed runs for 24 hours and thread records for one hour after termination.
 
+## Workflow
+
+```mermaid
+flowchart LR
+    A[remaining-work = 3] --> B[waitForCondition]
+    C[interrupt-progress INT] --> D[subtract amount]
+    E[interrupt-cancel STR] --> F[set CANCELLED and zero work]
+    D --> B
+    F --> B
+    B -->|remaining-work = 0| G[report-status]
+```
+
 ## Prerequisites
 
 - Java 21+
-- A running LittleHorse Server
+- `lh-standalone:1.2.1` running. See the shared [server prerequisites](../../README.md).
 - `lhctl` configured for that server
 
 The module is independent: it uses `io.littlehorse:littlehorse-client:1.2.1`, its own Java 21 toolchain, and `new LHConfig()`. `new LHConfig()` reads the `LHC_*` environment variables.
@@ -70,3 +82,16 @@ Inspect the run and its nodes:
 lhctl get wfRun <wf_run_id>
 lhctl list nodeRun <wf_run_id>
 ```
+
+`InterruptsExample.buildWorkflow()` authors the condition and interrupt handler threads. `InterruptTasks` runs only at the task nodes reached by the WfRun; interrupt delivery and state mutation are performed by the server.
+
+## Source Files
+
+- [`InterruptsExample.java`](./src/main/java/io/littlehorse/examples/InterruptsExample.java) defines handlers, retention, and worker lifecycle.
+- [`InterruptTasks.java`](./src/main/java/io/littlehorse/examples/InterruptTasks.java) contains runtime task methods.
+
+## Common Failure Modes
+
+- `lhctl whoami` fails: the server is not running or `LHC_*` is not configured.
+- An interrupt is ignored: use the exact WfRun ID and event name, and send `INT` or `STR` matching the handler payload.
+- The condition does not unblock: progress must reduce `remaining-work` to zero; cancellation sets it to zero directly.

@@ -1,4 +1,4 @@
-# External Events
+# 45 External Events
 
 This standalone Java 21 example waits for a typed, correlated external event. The event content is a Boolean approval, and the workflow uses that value to produce an explicit semantic result. It also demonstrates both valid publication orders for a `PutCorrelatedEventRequest`:
 
@@ -7,10 +7,22 @@ This standalone Java 21 example waits for a typed, correlated external event. Th
 
 The wait has a fifteen-second timeout. A timeout runs a handler task and ends the workflow with the named `approval-timeout` business exception.
 
+## Workflow
+
+```mermaid
+flowchart LR
+    A[order-id] --> B[wait for approval-event]
+    B -->|true| C[record approved]
+    B -->|false| D[record rejected]
+    B -->|timeout| E[record-timeout]
+    E --> F[approval-timeout exception]
+```
+
 ## Prerequisites
 
 - Java 21 or newer.
 - Docker, if running LittleHorse locally.
+- `lh-standalone:1.2.1` running. See the shared [server prerequisites](../../README.md).
 - `lhctl` configured for the same server, or the `LHC_*` environment variables used by `LHConfig`.
 
 Start the local server if needed:
@@ -63,3 +75,16 @@ lhctl get taskRun <wf-run-id> <task-run-global-id>
 ```
 
 On a normal event, the typed Boolean is stored in `approved`, the workflow records approved or rejected, and `semantic-result` returns `APPROVED: <order-id>` or `REJECTED: <order-id>`. On timeout, inspect the named `approval-timeout` exception and the `record-timeout` task.
+
+`ExternalEventsExample.buildWorkflow()` authors the event wait and handlers. `ExternalEventsWorker` executes runtime tasks, while `PutCorrelatedEventRequest` delivers an event to the server independently of the WfSpec authoring code.
+
+## Source Files
+
+- [`ExternalEventsExample.java`](./src/main/java/io/littlehorse/examples/ExternalEventsExample.java) defines the event, workflow, demo runs, and lifecycle.
+- [`ExternalEventsWorker.java`](./src/main/java/io/littlehorse/examples/ExternalEventsWorker.java) contains runtime task methods.
+
+## Common Failure Modes
+
+- `lhctl whoami` fails: the standalone server is not running or `LHC_*` is not configured.
+- The event is not consumed: the correlation key must exactly match `order-id` and the event name must be `approval-event`.
+- A run times out: the fifteen-second timeout is intentional; inspect `record-timeout` and the `approval-timeout` exception.

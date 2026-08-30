@@ -32,7 +32,7 @@ runtime; the Java lambda only builds the WfSpec graph. The parent keeps the
 From `/home/colt/colt-code/lh-developer-hub`:
 
 ```bash
-gradle -p examples/lh-server/java/60-child-workflows run
+./gradlew -p examples/lh-server/java/60-child-workflows run
 ```
 
 The application registers `child-workflow-greet`, then the child WfSpec, then
@@ -73,7 +73,7 @@ lhctl list nodeRun <child-wf-run-id>
 ## Important Source Files
 
 - [`ChildWorkflowExample.java`](./src/main/java/io/littlehorse/examples/ChildWorkflowExample.java)
-  defines both WfSpecs, registration order, and worker lifecycle.
+  defines both WfSpecs, the `GreetingTasks` worker, registration order, and lifecycle.
 
 Workflow-authoring calls run during registration. `GreetingTasks.greet()` runs
 later in the worker process when a WfRun reaches a task node.

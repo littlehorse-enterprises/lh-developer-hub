@@ -33,7 +33,7 @@ same variable with `.asInherited()`. The child changes that shared variable to
 From `/home/colt/colt-code/lh-developer-hub`:
 
 ```bash
-gradle -p examples/lh-server/java/65-hierarchical-workflows run
+./gradlew -p examples/lh-server/java/65-hierarchical-workflows run
 ```
 
 Start the parent, then explicitly attach each descendant:

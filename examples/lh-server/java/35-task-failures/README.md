@@ -1,4 +1,4 @@
-# Task Failures
+# 35 Task Failures
 
 This standalone Java 21 application demonstrates the difference between technical task errors and named business exceptions. The workflow accepts a `scenario` input and always proceeds to `finish-operation` after the relevant failure handler completes.
 
@@ -9,6 +9,18 @@ This standalone Java 21 application demonstrates the difference between technica
 - `business-exception`: `perform-operation` throws an `LHTaskException` with a name, human-readable message, and string content. `handleException` matches the exception name, receives the content through the handler's `INPUT` variable, and passes the name and message to `recover-business-exception`.
 
 Business exceptions are named workflow outcomes, not technical errors. They are not retried, even though the operation node has a retry policy. Use `RuntimeException` for transient technical failures that should be retried; use `LHTaskException` when the workflow should handle a business outcome.
+
+## Workflow
+
+```mermaid
+flowchart LR
+    A[scenario] --> B[perform-operation]
+    B -->|success| C[finish-operation]
+    B -->|technical error, retry| D[recover-technical-error]
+    B -->|business exception| E[recover-business-exception]
+    D --> C
+    E --> C
+```
 
 ## What It Demonstrates
 
@@ -23,7 +35,7 @@ Business exceptions are named workflow outcomes, not technical errors. They are 
 ## Prerequisites
 
 - Java 21+
-- A reachable LittleHorse server
+- `lh-standalone:1.2.1` running. See the shared [server prerequisites](../../README.md).
 - `lhctl` configured for the same server
 
 ## Run
@@ -51,3 +63,16 @@ lhctl run task-failures scenario business-exception
 ```
 
 Inspect the WfRun and its node/task runs with the usual `lhctl get wfRun`, `lhctl list nodeRun`, and `lhctl get taskRun` commands. The task worker output shows each attempt and the business exception fields.
+
+`TaskFailuresExample.getWorkflow()` authors the retry and handler graph. `TaskFailureTasks` runs later in workers; retries apply to technical failures, not named business exceptions.
+
+## Source Files
+
+- [`TaskFailuresExample.java`](./src/main/java/io/littlehorse/examples/TaskFailuresExample.java) defines scenarios, retries, handlers, and lifecycle.
+- [`TaskFailureTasks.java`](./src/main/java/io/littlehorse/examples/TaskFailureTasks.java) contains runtime failures and recovery tasks.
+
+## Common Failure Modes
+
+- `lhctl whoami` fails: the server is not running or `LHC_*` is not configured.
+- A run is stuck at `perform-operation`: the worker is not running or its task definition was not registered.
+- `business-exception` has no retry: this is intentional because `LHTaskException` is a business outcome.

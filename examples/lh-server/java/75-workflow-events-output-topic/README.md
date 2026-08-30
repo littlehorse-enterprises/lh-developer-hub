@@ -38,7 +38,7 @@ it later.
 From `/home/colt/colt-code/lh-developer-hub`, using the standalone defaults:
 
 ```bash
-LH_KAFKA_BOOTSTRAP_SERVERS=localhost:9092 LH_TENANT_ID=default LH_CLUSTER_NAME=cluster1 gradle -p examples/lh-server/java/75-workflow-events-output-topic run
+LH_KAFKA_BOOTSTRAP_SERVERS=localhost:9092 LH_TENANT_ID=default LH_CLUSTER_NAME=cluster1 ./gradlew -p examples/lh-server/java/75-workflow-events-output-topic run
 ```
 
 The application registers the WfSpec and prints:

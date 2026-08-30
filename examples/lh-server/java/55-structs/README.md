@@ -1,4 +1,4 @@
-# Structs
+# 55 Structs
 
 This example builds nested LittleHorse structs in a WfSpec and passes them to typed Java task methods.
 
@@ -28,10 +28,21 @@ The `nested-structs-demo` workflow requires `customer-id`, `order-id`, `sku`, an
 
 The workflow retains completed runs for 24 hours and thread records for one hour after termination.
 
+## Workflow
+
+```mermaid
+flowchart LR
+    A[customer-id] --> B[lookup-address]
+    B --> C[normalize-address InlineStruct]
+    C --> D[build customer-profile]
+    D --> E[build purchase-order]
+    E --> F[save-order]
+```
+
 ## Prerequisites
 
 - Java 21+
-- A running LittleHorse Server
+- `lh-standalone:1.2.1` running. See the shared [server prerequisites](../../README.md).
 - `lhctl` configured for that server
 
 The module is independent: it uses `io.littlehorse:littlehorse-client:1.2.1`, its own Java 21 toolchain, and `new LHConfig()`. `new LHConfig()` reads the `LHC_*` environment variables.
@@ -65,3 +76,17 @@ lhctl get wfRun <wf_run_id>
 lhctl list nodeRun <wf_run_id>
 lhctl list taskRun <wf_run_id>
 ```
+
+`StructsExample.buildWorkflow()` authors the typed struct graph and field access expressions. `StructTasks` receives decoded POJOs and `InlineStruct` values later when the WfRun reaches each task node.
+
+## Source Files
+
+- [`StructsExample.java`](./src/main/java/io/littlehorse/examples/StructsExample.java) defines and registers the nested struct workflow.
+- [`StructTasks.java`](./src/main/java/io/littlehorse/examples/StructTasks.java) contains runtime struct task methods.
+- [`CustomerProfile.java`](./src/main/java/io/littlehorse/examples/CustomerProfile.java), [`Address.java`](./src/main/java/io/littlehorse/examples/Address.java), [`LineItem.java`](./src/main/java/io/littlehorse/examples/LineItem.java), and [`PurchaseOrder.java`](./src/main/java/io/littlehorse/examples/PurchaseOrder.java) define the annotated schemas.
+
+## Common Failure Modes
+
+- `lhctl whoami` fails: the server is not running or `LHC_*` is not configured.
+- Struct registration fails: register nested definitions on a clean development tenant or use compatible existing definitions.
+- A run is stuck at a task: the worker is not running or the task definition was not registered.

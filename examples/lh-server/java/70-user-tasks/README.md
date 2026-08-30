@@ -38,7 +38,7 @@ the server representation of form fields.
 From `/home/colt/colt-code/lh-developer-hub`:
 
 ```bash
-gradle -p examples/lh-server/java/70-user-tasks run
+./gradlew -p examples/lh-server/java/70-user-tasks run
 ```
 
 The application registers the notification task, both form schemas, and the
