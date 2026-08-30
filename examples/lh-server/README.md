@@ -22,21 +22,27 @@ Every example creates its client with `new LHConfig()`. `LHConfig` reads the `LH
 
 ## Java Learning Path
 
-The numbered names keep the examples in their recommended learning order. Entries marked **planned** will be added incrementally.
+The numbered names keep the examples in their recommended learning order. Entries marked **planned** will be added incrementally. The examples prefer LittleHorse's typed variables, arrays, maps, and structs over `JSON_OBJ` and `JSON_ARR`.
 
 | Example | What you will learn |
 | --- | --- |
-| `00-quickstart` **planned** | Define tasks and a KYC workflow, run workers, and start a `WfRun`. |
-| [`05-spring-boot`](./java/05-spring-boot/) | Start and inspect event-driven order workflows through a Spring Boot REST API. |
-| `10-javalin` **planned** | Integrate LittleHorse with a lightweight Javalin REST service. |
-| `15-structs` **planned** | Model typed domain data with structs, collections, JSON, and timestamps. |
-| `20-external-events` **planned** | Wait for, correlate, and time out external events. |
-| `25-failure-handling` **planned** | Use retries, handlers, checkpoints, and worker context. |
-| `30-user-tasks` **planned** | Build human approval flows with forms, users, groups, and reminders. |
-| `35-parallelism` **planned** | Spawn threads, fan out dynamically, join work, and race outcomes. |
-| `40-child-workflows` **planned** | Compose child workflows and understand hierarchical workflows. |
-| `45-saga` **planned** | Compensate completed actions after a later operation fails. |
-| `50-workflow-events` **planned** | Publish workflow events and await them from another application. |
-| `55-output-topic` **planned** | Consume workflow state changes from Kafka. |
+| `00-quickstart` **planned** | Define tasks and the KYC workflow from the upstream quickstart, start workers, run a `WfRun`, and inspect it. |
+| [`05-spring-boot`](./java/05-spring-boot/) | Start, signal, and inspect an event-driven order workflow through a Spring Boot REST API. |
+| `10-javalin` **planned** | Expose a smaller LittleHorse REST integration using Javalin. |
+| `15-advanced-variables` **planned** | Use typed arrays and maps, expressions, mutation, field access, and explicit casting. |
+| `20-timestamps` **planned** | Pass timestamp variables between Java and LittleHorse, sleep for a duration, and sleep until a scheduled time. |
+| `25-conditionals` **planned** | Build `doIf().doElseIf().doElse()` branches and `doWhile()` loops. |
+| `30-child-threads` **planned** | Spawn and join child threads, then handle child errors and business exceptions. |
+| `35-task-failures` **planned** | Distinguish technical errors from `LHTaskException`, configure retries, and handle exception content. |
+| `40-checkpoint-tasks` **planned** | Checkpoint side effects across retries and inspect execution metadata with `WorkerContext`. |
+| `45-external-events` **planned** | Wait for typed and correlated events, enforce a timeout, and recover through a failure handler. |
+| `50-interrupts` **planned** | Handle a typed interrupt payload, mutate workflow state, and resume from `waitForCondition()`. |
+| `55-structs` **planned** | Define structs, build nested structs dynamically in a `WfSpec`, access fields with `.get()`, and process `InlineStruct` in a worker. |
+| `60-child-workflows` **planned** | Start a child `WfRun`, pass typed inputs, wait for it, and consume its output. |
+| `65-hierarchical-workflows` **planned** | Relate parent and child `WfSpec`s and share public and inherited variables. |
+| `70-user-tasks` **planned** | Define forms, assign and reassign user tasks, schedule reminders, and handle cancellation. |
+| `75-workflow-events-output-topic` **planned** | Throw `WorkflowEvent`s with `wf.throwEvent()` and consume them from the Kafka output topic. |
+
+Every workflow will define a retention policy between 7 and 30 days. Across the learning path, examples will also demonstrate workflow-level and task-level retry policies, `WorkerContext`, `LHTaskException`, `handleError()`, and `handleException()`.
 
 The existing `taskdef-app`, `wfspec-app`, and `workflow-migrations` projects remain available as standalone references outside this learning path.
