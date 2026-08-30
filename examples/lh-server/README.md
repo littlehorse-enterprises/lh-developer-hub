@@ -33,7 +33,7 @@ The numbered names keep the examples in their recommended learning order. The ex
 | [`20-timestamps`](./java/20-timestamps/) | Pass timestamp variables between Java and LittleHorse and format them in task workers. |
 | [`25-conditionals`](./java/25-conditionals/) | Build `doIf().doElseIf().doElse()` branches from typed workflow expressions. |
 | [`30-child-threads`](./java/30-child-threads/) | Spawn and join child threads, then handle child errors and business exceptions. |
-| [`35-task-failures`](./java/35-task-failures/) | Distinguish technical errors from `LHTaskException`, configure retries, and handle exception content. |
+| [`35-task-failures`](./java/35-task-failures/) | Handle flaky payment API errors and `payment-rejected` exceptions using credit-card and amount inputs. |
 | [`40-checkpoint-tasks`](./java/40-checkpoint-tasks/) | Checkpoint side effects across retries and inspect execution metadata with `WorkerContext`. |
 | [`45-external-events`](./java/45-external-events/) | Wait for typed and correlated events, enforce a timeout, and recover through a failure handler. |
 | [`50-interrupts`](./java/50-interrupts/) | Handle a typed interrupt payload, mutate workflow state, and resume from `waitForCondition()`. |

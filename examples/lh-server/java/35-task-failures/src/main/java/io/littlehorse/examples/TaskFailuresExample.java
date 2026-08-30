@@ -12,46 +12,50 @@ import java.util.List;
 public class TaskFailuresExample {
 
     public static final String WORKFLOW_NAME = "task-failures";
-    public static final String OPERATION_TASK = "perform-operation";
-    public static final String RECOVER_TECHNICAL_TASK = "recover-technical-error";
-    public static final String RECOVER_BUSINESS_TASK = "recover-business-exception";
-    public static final String FINISH_TASK = "finish-operation";
+    public static final String PAYMENT_TASK = "make-payment";
+    public static final String RECOVER_TECHNICAL_TASK = "recover-payment-api-error";
+    public static final String HANDLE_INSUFFICIENT_FUNDS_TASK = "handle-insufficient-funds";
+    public static final String HANDLE_INVALID_CREDIT_CARD_TASK = "handle-invalid-credit-card";
+    public static final String PROCESS_SHIPMENT_TASK = "process-shipment";
 
-    public static final String SUCCESS_SCENARIO = "success";
-    public static final String RETRYABLE_SCENARIO = "retryable-runtime";
-    public static final String BUSINESS_SCENARIO = "business-exception";
+    public static final String CREDIT_CARD_INPUT = "credit-card";
+    public static final String AMOUNT_INPUT = "amount";
+    public static final String INSUFFICIENT_FUNDS_CARD = "4000000000009995";
+    public static final String INVALID_CREDIT_CARD = "4000000000000002";
 
-    public static final String BUSINESS_EXCEPTION_NAME = "inventory-unavailable";
-    public static final String BUSINESS_EXCEPTION_MESSAGE = "The requested inventory is unavailable";
+    public static final String PAYMENT_REJECTED_EXCEPTION = "payment-rejected";
+    public static final String INSUFFICIENT_FUNDS_CONTENT = "insufficient-funds";
+    public static final String INVALID_CREDIT_CARD_CONTENT = "invalid-credit-card";
 
     private static final WorkflowRetentionPolicy RETENTION_POLICY = WorkflowRetentionPolicy.newBuilder()
             .setSecondsAfterWfTermination(3600)
             .build();
 
     public static void wfLogic(WorkflowThread wf) {
-        WfRunVariable scenario = wf.declareStr("scenario").required();
-        NodeOutput operation = wf.execute(OPERATION_TASK, scenario).withRetries(1);
+        WfRunVariable creditCard = wf.declareStr(CREDIT_CARD_INPUT).required().masked();
+        WfRunVariable amount = wf.declareInt(AMOUNT_INPUT).required();
+        NodeOutput payment = wf.execute(PAYMENT_TASK, creditCard, amount).withRetries(1);
 
-        wf.handleError(operation, handler -> handler.execute(RECOVER_TECHNICAL_TASK));
-        wf.handleException(operation, BUSINESS_EXCEPTION_NAME, handler -> {
+        wf.handleError(payment, handler -> handler.execute(RECOVER_TECHNICAL_TASK));
+        wf.handleException(payment, PAYMENT_REJECTED_EXCEPTION, handler -> {
             WfRunVariable content = handler.declareStr(WorkflowThread.HANDLER_INPUT_VAR);
-            handler.execute(
-                    RECOVER_BUSINESS_TASK,
-                    BUSINESS_EXCEPTION_NAME,
-                    BUSINESS_EXCEPTION_MESSAGE,
-                    content);
+            handler.doIf(content.isEqualTo(INSUFFICIENT_FUNDS_CONTENT), insufficientFunds ->
+                            insufficientFunds.execute(HANDLE_INSUFFICIENT_FUNDS_TASK, content))
+                    .doElse(content.isEqualTo(INVALID_CREDIT_CARD_CONTENT), invalidCreditCard ->
+                            invalidCreditCard.execute(HANDLE_INVALID_CREDIT_CARD_TASK, content));
         });
 
-        wf.execute(FINISH_TASK, scenario).withRetries(1);
+        wf.execute(PROCESS_SHIPMENT_TASK, amount).withRetries(1);
     }
 
     public static List<LHTaskWorker> getTaskWorkers(LHConfig config) {
         TaskFailureTasks tasks = new TaskFailureTasks();
         return List.of(
-                new LHTaskWorker(tasks, OPERATION_TASK, config),
+                new LHTaskWorker(tasks, PAYMENT_TASK, config),
                 new LHTaskWorker(tasks, RECOVER_TECHNICAL_TASK, config),
-                new LHTaskWorker(tasks, RECOVER_BUSINESS_TASK, config),
-                new LHTaskWorker(tasks, FINISH_TASK, config));
+                new LHTaskWorker(tasks, HANDLE_INSUFFICIENT_FUNDS_TASK, config),
+                new LHTaskWorker(tasks, HANDLE_INVALID_CREDIT_CARD_TASK, config),
+                new LHTaskWorker(tasks, PROCESS_SHIPMENT_TASK, config));
     }
 
     public static void main(String[] args) {
