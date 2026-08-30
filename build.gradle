@@ -5,37 +5,33 @@
  * Learn more about Gradle by exploring our Samples at https://docs.gradle.org/9.0.0/samples
  */
 
-allprojects {
-	repositories {
-		mavenCentral()
+def javaExampleDirs = fileTree("${rootDir}/examples/lh-server/java") {
+	include '**/build.gradle'
+}.files.collect { it.parentFile }.sort { a, b -> a.path <=> b.path }
+
+def independentBuilds = javaExampleDirs.collect { exampleDir ->
+	tasks.register("build${exampleDir.name.replace('-', '_')}", GradleBuild) {
+		dir = exampleDir
+		tasks = ['build']
 	}
 }
 
-subprojects {
-	plugins.withId('java') {
-		java {
-			toolchain {
-				languageVersion = JavaLanguageVersion.of(21)
-			}
-		}
+def legacyRunDirs = javaExampleDirs.findAll { it.name in ['taskdef-app', 'wfspec-app'] }
+def independentRuns = legacyRunDirs.collect { exampleDir ->
+	tasks.register("run${exampleDir.name.replace('-', '_')}", GradleBuild) {
+		dir = exampleDir
+		tasks = ['run']
 	}
 }
 
 tasks.register('buildJavaExamples') {
 	group = 'examples'
 	description = 'Build all Java lh-server example modules.'
-	dependsOn(
-		':examples:lh-server:java:05-spring-boot:build',
-		':examples:lh-server:java:taskdef-app:build',
-		':examples:lh-server:java:wfspec-app:build'
-	)
+	dependsOn(independentBuilds)
 }
 
 tasks.register('runJavaExamples') {
 	group = 'examples'
 	description = 'Run all Java lh-server example applications.'
-	dependsOn(
-		':examples:lh-server:java:taskdef-app:run',
-		':examples:lh-server:java:wfspec-app:run'
-	)
+	dependsOn(independentRuns)
 }

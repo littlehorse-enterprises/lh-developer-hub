@@ -6,8 +6,3 @@
  */
 
 rootProject.name = 'lh-developer-hub'
-
-include(':examples:lh-server:java:taskdef-app')
-include(':examples:lh-server:java:wfspec-app')
-include(':examples:lh-server:java:workflow-migrations')
-include(':examples:lh-server:java:05-spring-boot')
