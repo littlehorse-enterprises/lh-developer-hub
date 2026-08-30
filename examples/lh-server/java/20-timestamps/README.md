@@ -1,21 +1,23 @@
 # 20 Timestamps
 
-This standalone Java 21 application registers a workflow that accepts a LittleHorse `TIMESTAMP` variable, passes it through a task, and uses the task output in a second task.
+This standalone Java 21 application registers a workflow that accepts a publish timestamp and book name, waits until the publish timestamp, and passes timestamp data through several tasks.
 
 ## Workflow
 
 ```mermaid
 flowchart LR
-    A[event-time TIMESTAMP] --> B[format-timestamp]
-    B --> C[print-timestamp]
-    C --> D[Completed WfRun]
+    A[publish-date TIMESTAMP] --> B[Sleep until publish date]
+    B --> C[publish-book]
+    C --> D[get-current-date]
+    C --> E[print-book-details]
 ```
 
 ## What It Demonstrates
 
-- `wf.declareTimestamp("event-time")` creates a required timestamp workflow variable.
+- `wf.declareTimestamp("publish-date")` creates a timestamp workflow variable with a default value.
+- `wf.sleepUntil(publishDate)` pauses the workflow until the provided timestamp.
 - `Instant` is a supported Java representation for a LittleHorse timestamp.
-- `withRetries(2)` allows the formatting task two retries after a failed attempt.
+- `publish-book` creates a book with multiple timestamp representations.
 - `withRetentionPolicy(...)` retains completed or failed workflow runs for one hour.
 - `new LHConfig()` reads the standard LittleHorse `LHC_*` environment configuration.
 - Task definitions are registered before the WfSpec, workers are started after registration, and a JVM shutdown hook closes them.
@@ -42,13 +44,13 @@ From the repository root:
 
 The process stays alive while the workers poll for tasks. Stop it with `Ctrl-C`; the shutdown hook closes both workers.
 
-In another terminal, start a workflow with an ISO-8601 timestamp:
+In another terminal, start a workflow with an ISO-8601 timestamp and book name:
 
 ```bash
-lhctl run timestamps event-time 2026-01-01T12:00:00Z
+lhctl run timestamps book-name "My Book" publish-date 2026-01-01T12:00:00Z
 ```
 
-The `print-timestamp` worker prints the formatted timestamp. The retention policy is part of the registered WfSpec and is applied after the run terminates.
+The `print-book-details` worker prints the book and current timestamp. The retention policy is part of the registered WfSpec and is applied after the run terminates.
 
 ## Inspect A Run
 
@@ -58,7 +60,7 @@ lhctl list nodeRun <wfRunId>
 lhctl get taskRun <wfRunId> <taskRunGlobalId>
 ```
 
-`TimestampExample.getWorkflow()` authors the WfSpec during startup. `TimestampTasks` runs later in the worker when a WfRun reaches each task node.
+`TimestampExample.wfLogic()` authors the WfSpec during startup. `Worker` runs later when a WfRun reaches each task node.
 
 ## Source Files
 
