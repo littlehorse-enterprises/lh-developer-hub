@@ -38,7 +38,7 @@ The numbered names keep the examples in their recommended learning order. The ex
 | [`45-external-events`](./java/45-external-events/) | Wait for typed and correlated events, enforce a timeout, and recover through a failure handler. |
 | [`50-interrupts`](./java/50-interrupts/) | Handle a typed interrupt payload, mutate workflow state, and resume from `waitForCondition()`. |
 | [`55-structs`](./java/55-structs/) | Define structs, build nested structs dynamically in a `WfSpec`, access fields with `.get()`, and process `InlineStruct` in a worker. |
-| [`60-child-workflows`](./java/60-child-workflows/) | Start a child `WfRun`, pass typed inputs, wait for it, and consume its output. |
+| [`60-child-workflows`](./java/60-child-workflows/) | Reuse one `contact-customer` child workflow from payment and order parent workflows. |
 | [`65-hierarchical-workflows`](./java/65-hierarchical-workflows/) | Relate parent and child `WfSpec`s and share public and inherited variables. |
 | [`70-user-tasks`](./java/70-user-tasks/) | Define forms, assign and reassign user tasks, schedule reminders, and handle cancellation. |
 | [`75-workflow-events-output-topic`](./java/75-workflow-events-output-topic/) | Throw `WorkflowEvent`s with `wf.throwEvent()` and consume them from the Kafka output topic. |
