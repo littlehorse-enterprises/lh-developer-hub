@@ -30,7 +30,7 @@ public class QuickstartApplication {
 
         registerIdentityVerifiedEvent(client);
         workers.forEach(LHTaskWorker::registerTaskDef);
-        Workflow workflow = Workflow.newWorkflow(QuickstartWorkflow.WF_SPEC_NAME, QuickstartWorkflow::wfLogic)
+        Workflow workflow = Workflow.newWorkflow(QuickstartWorkflow.WF_SPEC_NAME, QuickstartWorkflow::quickstartWf)
                 .withRetentionPolicy(WorkflowRetentionPolicy.newBuilder()
                         .setSecondsAfterWfTermination(14 * 24 * 60 * 60L)
                         .build());

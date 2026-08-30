@@ -12,6 +12,11 @@ public class OrderTasks {
 
     @LHTaskMethod(OrderWorkflow.COMPLETE_ORDER_TASK)
     public String completeOrder(boolean paymentReceived) {
-        return paymentReceived ? "COMPLETED" : "PAYMENT_REJECTED";
+        return "COMPLETED";
+    }
+
+    @LHTaskMethod(OrderWorkflow.REJECT_ORDER_TASK)
+    public String rejectOrder() {
+        return "PAYMENT_REJECTED";
     }
 }

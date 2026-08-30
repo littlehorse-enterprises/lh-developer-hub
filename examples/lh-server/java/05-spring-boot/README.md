@@ -16,8 +16,10 @@ You will learn how to:
 flowchart LR
     A[POST /orders] --> B[prepare-order task]
     B --> C[Wait for payment-received]
-    C --> D[complete-order task]
+    C -->|received=true| D[complete-order task]
+    C -->|received=false| F[reject-order task]
     D --> E[Completed WfRun]
+    F --> G[Payment rejected WfRun]
 ```
 
 The entrypoint variables are:
@@ -27,6 +29,8 @@ The entrypoint variables are:
 | `user-id` | The customer placing the order. |
 | `item-id` | The item being ordered. |
 | `order-status` | `AWAITING_PAYMENT`, `COMPLETED`, or `PAYMENT_REJECTED`. |
+
+After the payment event arrives, a workflow conditional routes accepted payments to `complete-order` and rejected payments to `reject-order`.
 
 ## Prerequisites
 

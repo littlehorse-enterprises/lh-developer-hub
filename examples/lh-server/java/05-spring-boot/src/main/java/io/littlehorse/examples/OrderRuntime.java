@@ -21,7 +21,8 @@ public class OrderRuntime implements ApplicationRunner {
         OrderTasks tasks = new OrderTasks();
         this.workers = List.of(
                 new LHTaskWorker(tasks, OrderWorkflow.PREPARE_ORDER_TASK, config),
-                new LHTaskWorker(tasks, OrderWorkflow.COMPLETE_ORDER_TASK, config));
+                new LHTaskWorker(tasks, OrderWorkflow.COMPLETE_ORDER_TASK, config),
+                new LHTaskWorker(tasks, OrderWorkflow.REJECT_ORDER_TASK, config));
     }
 
     @Override
@@ -30,7 +31,7 @@ public class OrderRuntime implements ApplicationRunner {
         client.putExternalEventDef(PutExternalEventDefRequest.newBuilder()
                 .setName(OrderWorkflow.PAYMENT_EVENT)
                 .build());
-        OrderWorkflow.build().registerWfSpec(client);
+        OrderWorkflow.buildOrderWorkflow().registerWfSpec(client);
         workers.forEach(LHTaskWorker::start);
     }
 

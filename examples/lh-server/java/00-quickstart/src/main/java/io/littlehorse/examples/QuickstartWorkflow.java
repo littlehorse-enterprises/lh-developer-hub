@@ -16,7 +16,7 @@ public final class QuickstartWorkflow {
 
     private QuickstartWorkflow() {}
 
-    public static void wfLogic(WorkflowThread wf) {
+    public static void quickstartWf(WorkflowThread wf) {
         WfRunVariable fullName = wf.declareStr("full-name").required().searchable();
         WfRunVariable email = wf.declareStr("email").required().searchable();
         WfRunVariable ssn = wf.declareInt("ssn").required().masked();
