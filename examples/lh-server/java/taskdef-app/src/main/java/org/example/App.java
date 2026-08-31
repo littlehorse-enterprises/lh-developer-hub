@@ -16,8 +16,6 @@ public class App {
         Greeter greeter = new Greeter();
         LHTaskWorker greeterWorker = new LHTaskWorker(greeter, "greet" , config);
         greeterWorker.registerTaskDef();
-
-        
-
+        Runtime.getRuntime().addShutdownHook(new Thread(greeterWorker::close));
     }
 }
