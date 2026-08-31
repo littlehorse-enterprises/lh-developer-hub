@@ -141,9 +141,16 @@ lhctl list nodeRun <child-wf-run-id>
 
 ## Important Source Files
 
+- [`ContactCustomerWorkflow.java`](./src/main/java/io/littlehorse/examples/ContactCustomerWorkflow.java)
+  defines the reusable customer-contact child WfSpec.
+- [`PaymentFlowWorkflow.java`](./src/main/java/io/littlehorse/examples/PaymentFlowWorkflow.java)
+  defines the payment parent WfSpec.
+- [`ProcessOrderWorkflow.java`](./src/main/java/io/littlehorse/examples/ProcessOrderWorkflow.java)
+  defines the order parent WfSpec and its restock flow.
+- [`ExampleTasks.java`](./src/main/java/io/littlehorse/examples/ExampleTasks.java)
+  contains the task implementations shared by the WfSpecs.
 - [`ChildWorkflowExample.java`](./src/main/java/io/littlehorse/examples/ChildWorkflowExample.java)
-  defines the reusable child, both parents, tasks, event registration, and
-  lifecycle.
+  registers the event definitions, WfSpecs, workers, and lifecycle.
 
 Workflow-authoring calls run during registration. The task methods and
 customer response event run later when a WfRun reaches those nodes.
