@@ -12,6 +12,7 @@ include(':examples:lh-server:java:wfspec-app')
 include(':examples:lh-server:java:workflow-migrations')
 include(':examples:saddle:java:00-quickstart')
 include(':examples:saddle:java:05-streamlet')
+include(':examples:lh-server:java:variables-example')
 
 project(':examples:saddle:java').projectDir = file('examples/saddle')
 project(':examples:saddle:java:00-quickstart').projectDir = file('examples/saddle/00-quickstart')
