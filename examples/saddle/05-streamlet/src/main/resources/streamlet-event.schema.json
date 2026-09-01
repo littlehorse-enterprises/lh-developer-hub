@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "StreamletEvent",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string",
+      "description": "Message carried by the event."
+    }
+  },
+  "required": ["message"],
+  "additionalProperties": false
+}

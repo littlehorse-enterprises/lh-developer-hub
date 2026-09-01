@@ -6,3 +6,13 @@
  */
 
 rootProject.name = 'lh-developer-hub'
+
+include(':examples:lh-server:java:taskdef-app')
+include(':examples:lh-server:java:wfspec-app')
+include(':examples:lh-server:java:workflow-migrations')
+include(':examples:saddle:java:00-quickstart')
+include(':examples:saddle:java:05-streamlet')
+
+project(':examples:saddle:java').projectDir = file('examples/saddle')
+project(':examples:saddle:java:00-quickstart').projectDir = file('examples/saddle/00-quickstart')
+project(':examples:saddle:java:05-streamlet').projectDir = file('examples/saddle/05-streamlet')

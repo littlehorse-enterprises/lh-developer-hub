@@ -1,0 +1,34 @@
+plugins {
+    id 'application'
+    id 'org.jsonschema2pojo' version '1.2.2'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.apache.kafka:kafka-clients:4.3.0'
+    implementation 'io.apicurio:apicurio-registry-jsonschema-serde-kafka:3.1.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.0'
+    runtimeOnly 'org.slf4j:slf4j-simple:2.0.16'
+}
+
+jsonSchema2Pojo {
+    source = files("${projectDir}/src/main/resources/streamlet-event.schema.json")
+    targetPackage = ''
+    useTitleAsClassname = true
+    includeConstructors = true
+    constructorsRequiredPropertiesOnly = true
+    includeAdditionalProperties = false
+    annotationStyle = 'jackson2'
+}
+
+application {
+    mainClass = 'App'
+}
+
+tasks.named('run') {
+    workingDir = projectDir
+    standardInput = System.in
+}

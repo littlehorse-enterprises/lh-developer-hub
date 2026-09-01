@@ -10,6 +10,10 @@ build/
 *.iml
 .vscode/
 
+# Local environment configuration
+.env
+streamlet.properties
+
 # Ignore Gradle project-specific cache directory
 .gradle
 
