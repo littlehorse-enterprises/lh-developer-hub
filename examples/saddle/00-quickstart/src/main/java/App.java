@@ -9,16 +9,16 @@ public class App {
     public static void main(String[] args) {
         LHConfig config = loadConfig();
         App tasks = new App();
-        LHTaskWorker worker = new LHTaskWorker(tasks, "send-slack-diy", config);
+        LHTaskWorker worker = new LHTaskWorker(tasks, "send-slack", config);
 
         worker.registerTaskDef();
         worker.start();
         Runtime.getRuntime().addShutdownHook(new Thread(worker::close));
 
-        System.out.println("send-slack-diy worker started.");
+        System.out.println("send-slack worker started.");
     }
 
-    @LHTaskMethod("send-slack-diy")
+    @LHTaskMethod("send-slack")
     public String sendSlackDiy(String message, String channel) {
         String output = "Sending message '" + message + "' to Slack channel '" + channel + "'.";
         System.out.println(output);
