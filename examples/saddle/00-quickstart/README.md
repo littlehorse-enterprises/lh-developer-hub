@@ -61,6 +61,8 @@ cp examples/saddle/00-quickstart/.env.example examples/saddle/00-quickstart/.env
 
 Save the generated LittleHorse configuration in `.env`, replacing every placeholder.
 
+**NOTE: If you copy .env into `~/.config/littlehorse.config`, you can use this configuration to access the LH Server via `lhctl`**
+
 #### Start the Worker
 
 From the repository root, run the following command:
