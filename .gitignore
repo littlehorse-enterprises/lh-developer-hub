@@ -12,6 +12,7 @@ build/
 
 # Local environment configuration
 .env
+streamlet.properties
 
 # Ignore Gradle project-specific cache directory
 .gradle
