@@ -10,6 +10,9 @@ build/
 *.iml
 .vscode/
 
+# Local environment configuration
+.env
+
 # Ignore Gradle project-specific cache directory
 .gradle
 
