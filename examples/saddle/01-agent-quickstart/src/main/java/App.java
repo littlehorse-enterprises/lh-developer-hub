@@ -17,7 +17,6 @@ public class App {
    
     public static void main(String[] args) {
         LHConfig config = loadConfig();
-        System.out.println("hello world");
 
         LittleHorseBlockingStub client = config.getBlockingStub();
         Workers taskMethods = new Workers();
