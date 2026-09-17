@@ -10,11 +10,20 @@ From `examples/lh-server/typescript`, start the application:
 npm run external-events
 ```
 
-In another terminal, start a workflow and copy the returned workflow run ID:
+In another terminal, start a workflow:
 
 ```bash
-lhctl run greet-event
-lhctl postEvent <wfRunId> name-posted
+lhctl run collect-underpants --wfRunId my-wf all-underpants '[]'
+```
+Now send external events to trigger interrupts:
+
+```bash
+lhctl postEvent my-wf underpant-collected STR anakin
+lhctl postEvent my-wf underpant-collected STR yoda
 ```
 
-The posting script sends `Obi-Wan Kenobi` as the event payload. The waiting workflow then resumes and invokes `greet`.
+Now send the external event that will advance the workflow:
+
+```bash
+lhctl postEvent my-wf done-collecting-underpants STR done!
+```
