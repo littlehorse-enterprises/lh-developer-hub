@@ -14,7 +14,7 @@ In another terminal, start a workflow and copy the returned workflow run ID:
 
 ```bash
 lhctl run greet-event
-npm run external-events:post -- <wf-run-id>
+lhctl postEvent <wfRunId> name-posted
 ```
 
 The posting script sends `Obi-Wan Kenobi` as the event payload. The waiting workflow then resumes and invokes `greet`.
