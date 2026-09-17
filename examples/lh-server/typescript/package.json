@@ -1,0 +1,36 @@
+{
+  "name": "littlehorse-typescript-concepts",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "tasks": "tsx src/01-tasks/worker.ts",
+    "workflows": "tsx src/02-workflows/main.ts",
+    "variables": "tsx src/03-variables/main.ts",
+    "conditionals": "tsx src/04-conditionals/main.ts",
+    "threads": "tsx src/06-threads/main.ts",
+    "child-workflows": "tsx src/07-child-workflows/main.ts",
+    "exceptions": "tsx src/08-exception-handling/main.ts",
+    "external-events": "tsx src/09-external-events/main.ts",
+    "external-events:post": "tsx src/09-external-events/post.ts",
+    "interrupts": "tsx src/10-interrupts/main.ts",
+    "interrupts:post": "tsx src/10-interrupts/post.ts",
+    "correlated-events": "tsx src/11-correlated-events/main.ts",
+    "correlated-events:post": "tsx src/11-correlated-events/post.ts",
+    "user-tasks": "tsx src/16-user-tasks/main.ts",
+    "user-tasks:run": "tsx src/16-user-tasks/run.ts",
+    "structdefs": "tsx src/21-structdefs/main.ts",
+    "structdefs:run": "tsx src/21-structdefs/run.ts",
+    "arrays-maps": "tsx src/22-arrays-and-23-maps/main.ts"
+  },
+  "dependencies": {
+    "littlehorse-client": "1.3.0-RC3",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.3.3"
+  }
+}

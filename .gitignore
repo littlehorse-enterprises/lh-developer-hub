@@ -5,6 +5,9 @@
 .gradle/
 build/
 
+# Node.js
+node_modules/
+
 # IDE
 .idea/
 *.iml
