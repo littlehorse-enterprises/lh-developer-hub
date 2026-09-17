@@ -1,5 +1,4 @@
 import { createTaskWorker, LHConfig, Workflow } from "littlehorse-client";
-import { Comparator } from "littlehorse-client/proto";
 import { z } from "zod";
 import { closeOnShutdown } from "../config.js";
 
@@ -44,7 +43,7 @@ const workflow = Workflow.newWorkflow("send-message", (wf) => {
 
   preferredContact.assign(wf.execute("fetch-contact-method", userId));
   wf.doIfElse(
-    wf.condition(preferredContact, Comparator.EQUALS, "COMLINK"),
+    preferredContact.isEqualTo("COMLINK"),
     (ifHandler) => {
       ifHandler.execute("send-comlink-message", userId, message);
     },
