@@ -1,6 +1,6 @@
 # Variables
 
-This example demonstrates required, searchable, and default workflow variables; assigning task output; mutating variables; formatting strings; and accessing JSON fields.
+This example demonstrates required and searchable workflow variables; assigning task output; mutating variables; formatting strings; and accessing JSON fields.
 
 ## Run
 
