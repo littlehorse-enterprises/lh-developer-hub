@@ -1,6 +1,6 @@
 # Exception Handling
 
-This example demonstrates task retries, exception handlers, custom exception names, and workflow recovery behavior.
+This example demonstrates exception handlers, custom exception names, and workflow recovery behavior.
 
 ## Run
 

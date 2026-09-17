@@ -1,6 +1,6 @@
 # Conditionals
 
-This example demonstrates `doIf`, `doElse`, and comparison expressions by selecting how a message is delivered.
+This example demonstrates `doIfElse` and comparison expressions by selecting how a message is delivered.
 
 ## Run
 
