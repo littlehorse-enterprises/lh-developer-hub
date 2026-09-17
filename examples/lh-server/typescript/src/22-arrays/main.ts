@@ -1,4 +1,4 @@
-import { arrayOf, createTaskWorker, LHConfig, Workflow } from "littlehorse-client";
+import { createTaskWorker, LHConfig, Workflow } from "littlehorse-client";
 import { VariableType } from "littlehorse-client/proto";
 import { z } from "zod";
 import { closeOnShutdown } from "../config.js";
@@ -16,12 +16,12 @@ const workers = [
   createTaskWorker(processItem, "process-item", config, {
     inputVars: { item: z.number().int() },
   }),
-  createTaskWorker(reportResult, "report-collection-result", config, {
+  createTaskWorker(reportResult, "report-array-result", config, {
     inputVars: { result: z.string() },
   }),
 ];
 
-const workflow = Workflow.newWorkflow("arrays-and-maps", (wf) => {
+const workflow = Workflow.newWorkflow("arrays-example", (wf) => {
   const numbers = wf.declareArray("my-array", VariableType.INT).required();
   const valueToCheck = wf.declareInt("value-to-check").required();
   const arraySize = wf.declareInt("array-size");
@@ -34,8 +34,8 @@ const workflow = Workflow.newWorkflow("arrays-and-maps", (wf) => {
 
   wf.doIfElse(
     numbers.doesContain(valueToCheck),
-    (found) => found.execute("report-collection-result", "value found"),
-    (notFound) => notFound.execute("report-collection-result", "value not found"),
+    (found) => found.execute("report-array-result", "value found"),
+    (notFound) => notFound.execute("report-array-result", "value not found"),
   );
 
   const children = wf.spawnThreadForEach(numbers, "process-element", (child) => {
@@ -43,24 +43,12 @@ const workflow = Workflow.newWorkflow("arrays-and-maps", (wf) => {
     child.execute("process-item", input);
   });
   wf.waitForThreads(children);
-
-  const myMap = wf.declareMap(
-    "my-map",
-    VariableType.STR,
-    VariableType.INT,
-  );
-
-  const myMapOfArrays = wf.declareMap(
-    "map-of-arrays",
-    VariableType.STR,
-    arrayOf(VariableType.INT),
-  );
 });
 
 await closeOnShutdown(workers);
 await Promise.all(workers.map((worker) => worker.registerTaskDef()));
 await workflow.registerWfSpec(config);
 console.log(
-  "Run with: lhctl run arrays-and-maps my-array '[1,2,3]' value-to-check 3 my-map '{\"one\":1}'",
+  "Run with: lhctl run arrays-example my-array '[1,2,3]' value-to-check 3",
 );
 await Promise.all(workers.map((worker) => worker.start()));
