@@ -25,7 +25,7 @@ Search for the User Task:
 lhctl search userTaskRun --userTaskDefName report-favorite-player --userId obiwan
 ```
 
-Complete the User Task
+Complete the User Task:
 
 ```bash
 lhctl execute userTaskRun <WfRunId> <GUID>
