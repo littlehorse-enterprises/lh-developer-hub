@@ -10,10 +10,23 @@ From `examples/lh-server/typescript`, start the application:
 npm run user-tasks
 ```
 
-In another terminal, create a workflow run and complete its user task automatically:
+View the User Task:
+```bash
+lhctl get userTaskDef report-favorite-player
+```
+Run the workflow: 
 
 ```bash
-npm run user-tasks:run
+lhctl run favorite-player-demo user-id obiwan
 ```
 
-The runner acts like a minimal UI client: it finds the user task assigned to `obiwan`, submits the form fields, and waits for workflow completion.
+Search for the User Task:
+```bash
+lhctl search userTaskRun --userTaskDefName report-favorite-player --userId obiwan
+```
+
+Complete the User Task:
+
+```bash
+lhctl execute userTaskRun <WfRunId> <GUID>
+```

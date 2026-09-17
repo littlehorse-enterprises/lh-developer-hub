@@ -34,10 +34,11 @@ Each main script registers its `TaskDef`s and `WfSpec`, starts its task workers,
 | Correlated Events | `npm run correlated-events` | Start a run, then `npm run correlated-events:post` |
 | User Tasks | `npm run user-tasks` | `npm run user-tasks:run` |
 | StructDefs | `npm run structdefs` | `npm run structdefs:run` |
-| Arrays and Maps | `npm run arrays-maps` | Use the printed `lhctl run` command |
+| Arrays | `npm run arrays` | Use the printed `lhctl run` command |
+| Maps | `npm run maps` | Use the printed `lhctl run` command |
 
 ## Native Array Limitation
 
-The current TypeScript task-worker schema API maps `z.array()` to `JSON_ARR`. It does not expose the native `ARRAY` input/output annotation available in Java and .NET, nor native `ARRAY` fields in a `StructDef`. The collections runnable therefore exercises native arrays and maps inside the workflow DSL, but does not claim native collection task I/O support.
+The current TypeScript task-worker schema API maps `z.array()` to `JSON_ARR`. It does not expose the native `ARRAY` input/output annotation available in Java and .NET, nor native `ARRAY` fields in a `StructDef`. The arrays example therefore exercises native arrays inside the workflow DSL, but does not claim native collection task I/O support.
 
 The TypeScript WfSpec API requires a LittleHorse `1.3.0-RC3` or current `master` server.
