@@ -1,0 +1,21 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://central.sonatype.com/repository/maven-snapshots/" }
+}
+
+dependencies {
+    implementation 'io.github.cdimascio:dotenv-java:3.2.0'
+    implementation 'io.littlehorse:littlehorse-client:1.3-SNAPSHOT'
+}
+
+application {
+    mainClass = 'App'
+}
+
+tasks.named('run') {
+    workingDir = projectDir
+}
