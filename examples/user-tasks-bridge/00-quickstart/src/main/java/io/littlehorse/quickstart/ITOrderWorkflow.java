@@ -7,8 +7,8 @@ import io.littlehorse.sdk.wfsdk.WorkflowThread;
 
 public class ITOrderWorkflow {
 
-    // There's a user `my-user` created automatically with the demo Pony ID image
-    // image. We'll just assign our task to that user. The Pony ID demo image
+    // There's a user `my-user` created automatically with the demo User Tasks Bridge
+    // image. We'll just assign our task to that user. The demo image
     //
     public static final String USER_ID = "someemailaddress@somedomain.com";
 

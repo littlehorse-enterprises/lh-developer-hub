@@ -1,6 +1,6 @@
-# Pony ID Quickstart
+# User Tasks Bridge Quickstart
 
-This example registers an IT request workflow, its user task form, and its task workers for the Pony ID Getting Started guide.
+This example registers an IT request workflow, its user task form, and its task workers for the User Tasks Bridge Getting Started guide.
 
 ## Prerequisites
 
@@ -8,7 +8,7 @@ This example registers an IT request workflow, its user task form, and its task 
 - Docker with at least 4 GB of RAM
 - `lhctl`
 
-Run all commands from the `lh-developer-hub` repository root. Start the Pony ID standalone environment:
+Run all commands from the `lh-developer-hub` repository root. Start the User Tasks Bridge standalone environment:
 
 ```bash
 docker run --pull always --name lh-user-tasks-bridge-standalone --rm -d \
@@ -20,7 +20,7 @@ docker run --pull always --name lh-user-tasks-bridge-standalone --rm -d \
 After the environment is ready, register the metadata and start the workers:
 
 ```bash
-./gradlew -p examples/pony-id/00-quickstart run
+./gradlew -p examples/user-tasks-bridge/00-quickstart run
 ```
 
 In another terminal, start a workflow run:
@@ -29,4 +29,4 @@ In another terminal, start a workflow run:
 lhctl run it-request item laptop employee obi-wan
 ```
 
-Open Pony ID at [http://localhost:3000](http://localhost:3000). Stop the worker with `Ctrl+C` and the environment with `docker stop lh-user-tasks-bridge-standalone`.
+Open the User Tasks Bridge Console at [http://localhost:3000](http://localhost:3000). Stop the worker with `Ctrl+C` and the environment with `docker stop lh-user-tasks-bridge-standalone`.

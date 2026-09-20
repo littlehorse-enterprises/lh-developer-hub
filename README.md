@@ -9,9 +9,9 @@ Examples and coding-agent skills for building applications with [LittleHorse](ht
 | Run my first LittleHorse workflow | [Server quickstart](./examples/lh-server/README.md#quickstart-by-language) |
 | Learn the Java SDK one concept at a time | [Java learning path](./examples/lh-server/README.md#java-learning-path) |
 | Browse TypeScript examples | [TypeScript concept examples](./examples/lh-server/typescript/) |
-| Build a Pony ID user-task workflow | [Pony ID quickstart](./examples/pony-id/00-quickstart/) |
+| Build a User Tasks Bridge workflow | [User Tasks Bridge quickstart](./examples/user-tasks-bridge/00-quickstart/) |
 | Build with the LittleHorse Quarkus extension | [Quarkus quickstart](./examples/lh-quarkus/00-quickstart/) |
-| Start workflows from Kafka records | [Kafka Connect quickstart](./examples/lh-connect/00-quickstart/) |
+| Start workflows from Kafka records | [Kafka Connect quickstart](./examples/kafka-connectors/00-quickstart/) |
 | Give a coding agent LittleHorse SDK guidance | [WfSpec skills](./skills/) |
 | Build with Saddle | [Saddle quickstart](./examples/saddle/00-quickstart/) |
 | Produce or consume Saddle Streamlets | [Streamlet quickstart](./examples/saddle/05-streamlet/) |
@@ -85,7 +85,7 @@ LittleHorse clients read `LHC_*` environment variables. The same example code ca
 
 The [LittleHorse Server examples guide](./examples/lh-server/README.md) contains the ordered Java catalog, four-language quickstart, TypeScript collection, and build commands.
 
-[Pony ID](./examples/pony-id/00-quickstart/) demonstrates identity-backed user tasks, the [Quarkus extension](./examples/lh-quarkus/00-quickstart/) manages workflow and worker lifecycles in a Quarkus application, and [Kafka Connect](./examples/lh-connect/00-quickstart/) starts workflows from Kafka records.
+[User Tasks Bridge](./examples/user-tasks-bridge/00-quickstart/) demonstrates identity-backed user tasks, the [Quarkus extension](./examples/lh-quarkus/00-quickstart/) manages workflow and worker lifecycles in a Quarkus application, and [Kafka Connect](./examples/kafka-connectors/00-quickstart/) starts workflows from Kafka records.
 
 [Saddle](./examples/saddle/) adds managed workflow and streaming services around LittleHorse. Start with its Workflow Builder quickstart, then continue to the schema-backed Streamlet producer and consumer.
 
@@ -122,9 +122,9 @@ examples/lh-server/python/      Python quickstart
 examples/lh-server/go/          Go quickstart
 examples/lh-server/dotnet/      .NET quickstart
 examples/lh-server/typescript/  TypeScript concept examples
-examples/pony-id/               Pony ID user-task quickstart
+examples/user-tasks-bridge/     User Tasks Bridge user-task quickstart
 examples/lh-quarkus/            Quarkus extension quickstart
-examples/lh-connect/            Kafka Connect quickstart
+examples/kafka-connectors/      Kafka Connect quickstart
 examples/saddle/                Saddle workflow and streaming examples
 skills/                         WfSpec references for coding agents
 ```

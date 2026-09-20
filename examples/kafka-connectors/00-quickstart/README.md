@@ -11,7 +11,7 @@ This example starts LittleHorse, Kafka, and a standalone Kafka Connect worker wi
 Run all commands from the `lh-developer-hub` repository root. Start the services and configure the connector:
 
 ```bash
-./examples/lh-connect/00-quickstart/setup.sh
+./examples/kafka-connectors/00-quickstart/setup.sh
 ```
 
 Register the workflow:
@@ -45,7 +45,7 @@ Send records using the workflow's exact variable names:
 Open the Dashboard at [http://localhost:8080](http://localhost:8080). When finished, stop the workers with `Ctrl+C`, then remove only this quickstart's containers and downloaded connector files:
 
 ```bash
-./examples/lh-connect/00-quickstart/cleanup.sh
+./examples/kafka-connectors/00-quickstart/cleanup.sh
 ```
 
 The setup uses Docker host networking, which may not be available or enabled in every Docker Desktop installation.
