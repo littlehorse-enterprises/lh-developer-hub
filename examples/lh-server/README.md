@@ -1,6 +1,6 @@
 # LittleHorse Server Examples
 
-These examples are written for developers who know Java but are new to LittleHorse. Each example is an independent Gradle project, so you can copy one without bringing along shared build logic from this repository.
+Start here for runnable LittleHorse Server examples. The KYC quickstart is available in Java, Python, Go, and .NET; additional Java and TypeScript examples cover individual SDK concepts.
 
 ## Start LittleHorse
 
@@ -20,13 +20,24 @@ lhctl whoami
 
 Every example creates its client with `new LHConfig()`. `LHConfig` reads the `LHC_*` environment variables, so the same examples work with a remote LittleHorse Server, including LittleHorse Cloud, after you source the environment variables for that server.
 
+## Quickstart By Language
+
+Every implementation registers the same `quickstart` WfSpec, typed correlated event, and three task definitions. Choose the language you use, then follow its README:
+
+| Language | Quickstart |
+| --- | --- |
+| Java | [`java/00-quickstart`](./java/00-quickstart/) |
+| Python | [`python/00-quickstart`](./python/00-quickstart/) |
+| Go | [`go/00-quickstart`](./go/00-quickstart/) |
+| .NET | [`dotnet/00-quickstart`](./dotnet/00-quickstart/) |
+
 ## Java Learning Path
 
 The numbered names keep the examples in their recommended learning order. The examples prefer LittleHorse's typed variables, arrays, maps, and structs over `JSON_OBJ` and `JSON_ARR`.
 
 | Example | What you will learn |
 | --- | --- |
-| [`00-quickstart`](./java/00-quickstart/) | Define tasks and the KYC workflow from the upstream quickstart, start workers, run a `WfRun`, and inspect it. |
+| [`00-quickstart`](./java/00-quickstart/) | Define tasks and the KYC workflow, register metadata, start workers, run a `WfRun`, and inspect it. |
 | [`05-spring-boot`](./java/05-spring-boot/) | Start, signal, and inspect an event-driven order workflow through a Spring Boot REST API. |
 | [`10-javalin`](./java/10-javalin/) | Expose a smaller LittleHorse REST integration using Javalin. |
 | [`15-advanced-variables`](./java/15-advanced-variables/) | Use typed arrays and maps, expressions, mutation, field access, and explicit casting. |
@@ -45,4 +56,8 @@ The numbered names keep the examples in their recommended learning order. The ex
 
 The numbered examples use retention policies and retry policies appropriate to the feature being demonstrated. Across the learning path, examples also demonstrate workflow-level and task-level retries, `WorkerContext`, `LHTaskException`, `handleError()`, and `handleException()`.
 
-The existing `taskdef-app`, `wfspec-app`, and `workflow-migrations` projects remain available as standalone references outside this learning path.
+The existing `taskdef-app`, `variables-example`, `wfspec-app`, and `workflow-migrations` projects remain available as standalone references outside this learning path.
+
+## TypeScript Concept Examples
+
+The [`typescript`](./typescript/) directory contains runnable counterparts for the server concept documentation, including workflows, variables, conditions, threads, events, user tasks, structs, arrays, and maps. These examples use the TypeScript client `1.3.0` and require a compatible LittleHorse Server.

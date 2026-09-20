@@ -1,23 +1,23 @@
-# 00 Quickstart: KYC Workflow
+# Java Quickstart: KYC Workflow
 
-This example is a deterministic adaptation of the upstream KYC quickstart. You will learn how to:
+This example powers the Java tab in the [LittleHorse quickstart](https://littlehorse.io/docs/getting-started/quickstart). You will learn how to:
 
 - Register task definitions, a typed correlated external event, and a `WfSpec`.
 - Use required, searchable, and masked workflow variables.
 - Retry a technical task failure with `.withRetries(3)`.
 - Wait for a typed boolean event correlated by email.
 - Handle an event timeout and use `WorkerContext` inside a task worker.
-- Start a `WfRun` from Java and inspect it with `lhctl`.
+- Register metadata separately from the long-lived task workers.
 
 ## Workflow
 
 ```mermaid
 flowchart LR
-    A[Start quickstart-kyc] --> B[verify-identity, retry up to 3 times]
+    A[Start quickstart] --> B[verify-identity, retry up to 3 times]
     B --> C[Wait for typed identity-verified event]
     C -->|true| D[notify-customer-verified]
     C -->|false| E[notify-customer-not-verified]
-    C -->|timeout| F[Notify and fail identity-verification-timeout]
+    C -->|timeout| F[Notify and fail customer-not-verified]
 ```
 
 `full-name` and `email` are required and searchable. `ssn` is required and masked. The event content is a boolean, and its correlation key is the email string.
@@ -31,27 +31,28 @@ flowchart LR
 
 The application creates `LHConfig` with `new LHConfig()`, so `LHC_*` environment variables select a remote server when needed.
 
-## Run
+## Register The Workflow
 
 From the `lh-developer-hub` repository root, run this exact command:
 
 ```bash
-./gradlew -p examples/lh-server/java/00-quickstart run
+./gradlew -p examples/lh-server/java/00-quickstart run --args register
 ```
 
-The process stays alive because its task workers are running. It registers metadata, starts the workers, and prints a programmatically-created sample run ID:
-
-```text
-Started sample WfRun: <wfRunId>
-Send identity-verified for ada@example.com to complete the sample run.
-```
+The command registers the three `TaskDef`s, the typed `identity-verified` `ExternalEventDef`, and the `quickstart` `WfSpec`.
 
 ## Drive The Workflow
 
-The application already starts one sample run. To start another run with `lhctl`:
+Start a run before the workers so you can see it wait in `TASK_SCHEDULED`:
 
 ```bash
-lhctl run quickstart-kyc full-name 'Grace Hopper' email grace@example.com ssn 987654321
+lhctl run quickstart full-name 'Grace Hopper' email grace@example.com ssn 987654321
+```
+
+Start the workers in a second terminal:
+
+```bash
+./gradlew -p examples/lh-server/java/00-quickstart run --args workers
 ```
 
 The run is `RUNNING` while it waits for the correlated event. Complete it with `true`:
@@ -65,11 +66,11 @@ Use `BOOL false` to execute the not-verified branch. To exercise the timeout bra
 Expected task output includes:
 
 ```text
-Verification request accepted for Grace Hopper at grace@example.com (SSN ending 4321)
+Verification request accepted for Grace Hopper at grace@example.com
 Notified Grace Hopper that identity was verified
 ```
 
-The terminal state for the true and false paths is `COMPLETED`. The timeout path is `ERROR` after the notification and the `identity-verification-timeout` failure.
+The terminal state for the true and false paths is `COMPLETED`. The timeout path is `ERROR` after the notification and the `customer-not-verified` failure.
 
 The identity task's retry policy is for technical failures and timeouts. A named `LHTaskException` represents a business exception and is not retried by this policy.
 
@@ -79,7 +80,7 @@ The identity task's retry policy is for technical failures and timeouts. A named
 lhctl get wfRun <wfRunId>
 lhctl list nodeRun <wfRunId>
 lhctl get taskRun <wfRunId> <taskRunGlobalId>
-lhctl search variable --name email --value grace@example.com --varType STR --wfSpecName quickstart-kyc --wfSpecMajorVersion 0 --wfSpecRevision 0
+lhctl search variable --name email --value grace@example.com --varType STR --wfSpecName quickstart --wfSpecMajorVersion 0 --wfSpecRevision 0
 ```
 
 The `WfRun` output shows the final `identity-verified` value and the event wait. `list nodeRun` shows the verification, event, and notification nodes. `get taskRun` shows task attempts, including retries if a worker-side technical error is introduced while experimenting with `QuickstartTasks`.
@@ -90,9 +91,9 @@ The `WfRun` output shows the final `identity-verified` value and the event wait.
 
 ## Source Files
 
-- [`QuickstartWorkflow.java`](./src/main/java/io/littlehorse/examples/QuickstartWorkflow.java) defines the graph, event wait, retry, retention, and timeout handler.
+- [`QuickstartWorkflow.java`](./src/main/java/io/littlehorse/examples/QuickstartWorkflow.java) defines the graph, event wait, retry, and timeout handler.
 - [`QuickstartTasks.java`](./src/main/java/io/littlehorse/examples/QuickstartTasks.java) contains runtime task methods.
-- [`QuickstartApplication.java`](./src/main/java/io/littlehorse/examples/QuickstartApplication.java) registers metadata, starts workers, and creates the sample run.
+- [`QuickstartApplication.java`](./src/main/java/io/littlehorse/examples/QuickstartApplication.java) provides the separate `register` and `workers` commands.
 
 ## Common Failure Modes
 

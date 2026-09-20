@@ -7,8 +7,7 @@ public class QuickstartTasks {
 
     @LHTaskMethod(QuickstartWorkflow.VERIFY_IDENTITY_TASK)
     public String verifyIdentity(String fullName, String email, int ssn) {
-        return "Verification request accepted for " + fullName + " at " + email + " (SSN ending " + (ssn % 10000)
-                + ")";
+        return "Verification request accepted for " + fullName + " at " + email;
     }
 
     @LHTaskMethod(QuickstartWorkflow.NOTIFY_VERIFIED_TASK)

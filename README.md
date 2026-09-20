@@ -1,97 +1,137 @@
 # LittleHorse Developer Hub
 
-The LittleHorse Developer Hub is the home for tested examples and AI coding skills for building applications with [LittleHorse](https://littlehorse.io). Start with the open-source LittleHorse Server, use the skills while writing your own workflows, or explore Saddle's managed workflow and streaming features.
+Examples and coding-agent skills for building applications with [LittleHorse](https://littlehorse.io).
 
-## Choose A Path
+## Start Here
 
-| Path | Start here | What it covers |
-| --- | --- | --- |
-| LittleHorse Server | [`examples/lh-server/java/00-quickstart`](./examples/lh-server/java/00-quickstart/) | Business-as-Code, task workers, events, workflow runs, and the LittleHorse SDK. |
-| WfSpec skills | [`skills/`](./skills/) | Agent-ready references for authoring workflows in Java, Go, Python, and .NET. |
-| Saddle | [`examples/saddle/00-quickstart`](./examples/saddle/00-quickstart/) | The visual Workflow Builder, managed workers, webhooks, Streamlets, and triggers. |
-| Saddle streaming | [`examples/saddle/05-streamlet`](./examples/saddle/05-streamlet/) | Produce and consume schema-validated Kafka records through StreamSense. |
+| I want to... | Go to... |
+| --- | --- |
+| Run my first LittleHorse workflow | [Server quickstart](./examples/lh-server/README.md#quickstart-by-language) |
+| Learn the Java SDK one concept at a time | [Java learning path](./examples/lh-server/README.md#java-learning-path) |
+| Browse TypeScript examples | [TypeScript concept examples](./examples/lh-server/typescript/) |
+| Build a Pony ID user-task workflow | [Pony ID quickstart](./examples/pony-id/00-quickstart/) |
+| Build with the LittleHorse Quarkus extension | [Quarkus quickstart](./examples/lh-quarkus/00-quickstart/) |
+| Start workflows from Kafka records | [Kafka Connect quickstart](./examples/lh-connect/00-quickstart/) |
+| Give a coding agent LittleHorse SDK guidance | [WfSpec skills](./skills/) |
+| Build with Saddle | [Saddle quickstart](./examples/saddle/00-quickstart/) |
+| Produce or consume Saddle Streamlets | [Streamlet quickstart](./examples/saddle/05-streamlet/) |
 
-## Get Started With LittleHorse Server
+## Run Your First Workflow
 
-You need Docker, Java 21 or newer, and [`lhctl`](https://littlehorse.io/docs/getting-started/quickstart#install-lhctl). On macOS, install the CLI with:
+You need Docker, [`lhctl`](https://littlehorse.io/docs/getting-started/quickstart#system-setup), and Java 21 or newer for this default path.
+
+Clone the repository and start the standalone LittleHorse Server, Dashboard, and Kafka broker:
 
 ```bash
-brew install littlehorse-enterprises/lh/lhctl
-```
+git clone https://github.com/littlehorse-enterprises/lh-developer-hub.git
+cd lh-developer-hub
 
-Start the standalone LittleHorse Server, Dashboard, and Kafka broker:
-
-```bash
 docker run --pull always --name lh-standalone --rm -d \
   -p 2023:2023 -p 8080:8080 -p 9092:9092 \
   ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.2.1
-```
 
-Verify the connection:
-
-```bash
 lhctl whoami
 ```
 
-Then run the first example from this repository's root:
+Register the Java quickstart metadata:
 
 ```bash
-./gradlew -p examples/lh-server/java/00-quickstart run
+./gradlew -p examples/lh-server/java/00-quickstart run --args register
 ```
 
-The application registers a `WfSpec` and its `TaskDef`s, starts the task workers, and creates a sample `WfRun`. It remains running because workers are long-lived processes. Open the Dashboard at [http://localhost:8080](http://localhost:8080), or inspect the run with:
+Start a workflow run before its workers so you can see the task wait in `TASK_SCHEDULED`:
 
 ```bash
-lhctl get wfRun <wfRunId>
+lhctl run quickstart \
+  full-name 'Grace Hopper' \
+  email grace@example.com \
+  ssn 987654321
 ```
 
-Follow the [quickstart walkthrough](./examples/lh-server/java/00-quickstart/README.md) to send its correlated event and complete the workflow.
-
-## Tour The Server Examples
-
-The numbered Java examples form a learning path. After the quickstart, continue with Spring Boot or Javalin integrations, then work through variables, conditions, concurrency, failures, events, interrupts, structs, child workflows, user tasks, and the Kafka output topic.
-
-See the [LittleHorse Server examples guide](./examples/lh-server/README.md) for the complete ordered catalog and commands. Every example is an independent Gradle project, so it can also be copied into another workspace without relying on shared build logic.
-
-Build all Java server examples from the repository root with:
+Start the workers in a second terminal:
 
 ```bash
+./gradlew -p examples/lh-server/java/00-quickstart run --args workers
+```
+
+Complete the workflow by sending its correlated event:
+
+```bash
+lhctl put correlatedEvent grace@example.com identity-verified BOOL true
+```
+
+Open the Dashboard at [http://localhost:8080](http://localhost:8080), or use `lhctl get wfRun <wfRunId>` to inspect the run. When finished, stop the workers with `Ctrl+C` and remove the local server with `docker stop lh-standalone`.
+
+The same quickstart is runnable in four languages:
+
+| Language | Requirements | Walkthrough |
+| --- | --- | --- |
+| Java | Java 21+ | [`java/00-quickstart`](./examples/lh-server/java/00-quickstart/) |
+| Python | Python 3.10-3.13 | [`python/00-quickstart`](./examples/lh-server/python/00-quickstart/) |
+| Go | Go 1.24+ | [`go/00-quickstart`](./examples/lh-server/go/00-quickstart/) |
+| .NET | .NET 8+ | [`dotnet/00-quickstart`](./examples/lh-server/dotnet/00-quickstart/) |
+
+## Choose Compatible Examples
+
+| Area | Client/server version | Additional requirements |
+| --- | --- | --- |
+| Four-language quickstart and numbered Java examples | LittleHorse `1.2.1` | Language runtime listed above |
+| TypeScript concept examples | Client `1.3.0`; compatible 1.3 server | Node.js 20+ |
+| Saddle examples | Version is environment-specific | Access to a Saddle environment |
+
+LittleHorse clients read `LHC_*` environment variables. The same example code can connect to the local standalone server, another LittleHorse deployment, or LittleHorse Cloud when those variables are configured.
+
+## Browse More Examples
+
+The [LittleHorse Server examples guide](./examples/lh-server/README.md) contains the ordered Java catalog, four-language quickstart, TypeScript collection, and build commands.
+
+[Pony ID](./examples/pony-id/00-quickstart/) demonstrates identity-backed user tasks, the [Quarkus extension](./examples/lh-quarkus/00-quickstart/) manages workflow and worker lifecycles in a Quarkus application, and [Kafka Connect](./examples/lh-connect/00-quickstart/) starts workflows from Kafka records.
+
+[Saddle](./examples/saddle/) adds managed workflow and streaming services around LittleHorse. Start with its Workflow Builder quickstart, then continue to the schema-backed Streamlet producer and consumer.
+
+## Use The Coding-Agent Skills
+
+Load the `SKILL.md` for the SDK you are using before asking an agent to create or review a `WfSpec`:
+
+- [Java](./skills/littlehorse-java-wfspec/SKILL.md)
+- [Python](./skills/littlehorse-python-wfspec/SKILL.md)
+- [Go](./skills/littlehorse-go-wfspec/SKILL.md)
+- [.NET](./skills/littlehorse-dotnet-wfspec/SKILL.md)
+
+These references cover variables, tasks, expressions, control flow, events, threads, child workflows, failures, user tasks, and structs. The central mental model is the same in every language: authoring code builds and registers a `WfSpec` graph; a `WfRun` executes that graph later, and task workers perform runtime work.
+
+## Build The Examples
+
+```bash
+# All Java server examples
 ./gradlew buildJavaExamples
+
+# TypeScript concept examples
+cd examples/lh-server/typescript
+npm install
+npm run build
 ```
 
-The examples use `new LHConfig()`, which reads `LHC_*` environment variables. With the appropriate configuration, the same code can connect to the local standalone server, another LittleHorse deployment, or LittleHorse Cloud.
-
-## Use The WfSpec Skills
-
-The [`skills`](./skills/) directory contains focused references that coding agents can load while creating or reviewing a LittleHorse `WfSpec`:
-
-- [`littlehorse-java-wfspec`](./skills/littlehorse-java-wfspec/SKILL.md)
-- [`littlehorse-go-wfspec`](./skills/littlehorse-go-wfspec/SKILL.md)
-- [`littlehorse-python-wfspec`](./skills/littlehorse-python-wfspec/SKILL.md)
-- [`littlehorse-dotnet-wfspec`](./skills/littlehorse-dotnet-wfspec/SKILL.md)
-
-Each skill covers the language's real SDK syntax for variables, task nodes, expressions, control flow, events, threads, child workflows, failures, user tasks, and structs. Give the relevant `SKILL.md` to an agent directly, or install it using your agent's skill mechanism, before asking the agent to author LittleHorse workflow code.
-
-The central mental model is the same in every language: WfSpec authoring code builds and registers a graph; it does not execute the business process. A `WfRun` executes that graph later, and task workers perform the runtime work when the server schedules a `TaskRun`.
-
-## Explore Saddle
-
-Saddle adds a management UI and platform services around LittleHorse. These examples assume that you have access to a Saddle environment.
-
-Start with the [Saddle quickstart](./examples/saddle/00-quickstart/), which walks through a complete integration using a managed or local task worker, the Workflow Builder, a webhook-backed Streamlet, and a workflow trigger.
-
-Next, use the [Streamlet quickstart](./examples/saddle/05-streamlet/) to access Saddle's Kafka features. It walks through creating a schema-backed Streamlet and StreamSense/Schemas clients in the UI, then runs one Java application as either a Kafka producer or consumer.
+The Java examples are independent Gradle projects. The Python, Go, and .NET quickstart READMEs contain their language-specific validation commands.
 
 ## Repository Layout
 
 ```text
-examples/lh-server/   Open-source LittleHorse Server examples
-examples/saddle/      Saddle workflow and streaming quickstarts
-skills/               WfSpec authoring skills for coding agents
+examples/lh-server/java/        Java quickstart and learning path
+examples/lh-server/python/      Python quickstart
+examples/lh-server/go/          Go quickstart
+examples/lh-server/dotnet/      .NET quickstart
+examples/lh-server/typescript/  TypeScript concept examples
+examples/pony-id/               Pony ID user-task quickstart
+examples/lh-quarkus/            Quarkus extension quickstart
+examples/lh-connect/            Kafka Connect quickstart
+examples/saddle/                Saddle workflow and streaming examples
+skills/                         WfSpec references for coding agents
 ```
 
-## Learn More
+## Help And Links
 
 - [LittleHorse documentation](https://littlehorse.io/docs)
 - [LittleHorse Server source](https://github.com/littlehorse-enterprises/littlehorse)
 - [LittleHorse community Slack](https://launchpass.com/littlehorsecommunity/free)
+- [Apache 2.0 license](./LICENSE)
