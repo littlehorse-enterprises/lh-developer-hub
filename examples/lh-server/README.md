@@ -1,6 +1,6 @@
 # LittleHorse Server Examples
 
-Start here for runnable LittleHorse Server examples. The KYC quickstart is available in Java, Python, Go, and .NET; additional Java and TypeScript examples cover individual SDK concepts.
+Start here for runnable LittleHorse Server examples. The KYC quickstart is available in Java, Python, Go, and .NET; additional Java, Go, and TypeScript examples cover individual SDK concepts.
 
 ## LittleHorse Server Version
 
@@ -30,6 +30,19 @@ Every implementation registers the same `quickstart` WfSpec, typed correlated ev
 | Python | [`python/00-quickstart`](./python/00-quickstart/) |
 | Go | [`go/00-quickstart`](./go/00-quickstart/) |
 | .NET | [`dotnet/00-quickstart`](./dotnet/00-quickstart/) |
+
+## Go Concept Examples
+
+Runnable counterparts for the Go snippets in the server concept documentation live under [`go/`](./go/). Each concept keeps task functions in `tasks.go`, workflow definitions in `workflow.go`, and setup in `main.go`.
+
+The concept examples share LittleHorse Go SDK `v1.3.0` through [`go/go.mod`](./go/go.mod). To change the version, update that file and then verify the shared module from the repository root:
+
+```bash
+go -C examples/lh-server/go mod tidy
+go -C examples/lh-server/go test ./...
+```
+
+The existing [`go/00-quickstart`](./go/00-quickstart/) remains an independent module because its commands are also published on the LittleHorse website. Native `ARRAY` and `MAP` examples are not included because those APIs are not currently available in the Go SDK.
 
 ## Java Learning Path
 

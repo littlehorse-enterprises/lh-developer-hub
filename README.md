@@ -8,6 +8,7 @@ Examples and coding-agent skills for building applications with [LittleHorse](ht
 | --- | --- |
 | Run my first LittleHorse workflow | [Server quickstart](./examples/lh-server/README.md#quickstart-by-language) |
 | Learn the Java SDK one concept at a time | [Java learning path](./examples/lh-server/README.md#java-learning-path) |
+| Learn the Go SDK one concept at a time | [Go concept examples](./examples/lh-server/README.md#go-concept-examples) |
 | Browse TypeScript examples | [TypeScript concept examples](./examples/lh-server/typescript/) |
 | Build a User Tasks Bridge workflow | [User Tasks Bridge quickstart](./examples/user-tasks-bridge/00-quickstart/) |
 | Build with the LittleHorse Quarkus extension | [Quarkus quickstart](./examples/lh-quarkus/00-quickstart/) |
@@ -76,6 +77,7 @@ The same quickstart is runnable in four languages:
 | Area | Client/server version | Additional requirements |
 | --- | --- | --- |
 | Four-language quickstart and numbered Java examples | LittleHorse `1.2.1` | Language runtime listed above |
+| Go concept examples | Client `1.3.0`; compatible server | Go 1.25+ |
 | TypeScript concept examples | Client `1.3.0`; compatible 1.3 server | Node.js 20+ |
 | Saddle examples | Version is environment-specific | Access to a Saddle environment |
 
@@ -83,7 +85,7 @@ LittleHorse clients read `LHC_*` environment variables. The same example code ca
 
 ## Browse More Examples
 
-The [LittleHorse Server examples guide](./examples/lh-server/README.md) contains the ordered Java catalog, four-language quickstart, TypeScript collection, and build commands.
+The [LittleHorse Server examples guide](./examples/lh-server/README.md) contains the ordered Java catalog, Go and TypeScript concept collections, four-language quickstart, and build commands.
 
 [User Tasks Bridge](./examples/user-tasks-bridge/00-quickstart/) demonstrates identity-backed user tasks, the [Quarkus extension](./examples/lh-quarkus/00-quickstart/) manages workflow and worker lifecycles in a Quarkus application, and [Kafka Connect](./examples/kafka-connectors/00-quickstart/) starts workflows from Kafka records.
 
@@ -106,6 +108,9 @@ These references cover variables, tasks, expressions, control flow, events, thre
 # All Java server examples
 ./gradlew buildJavaExamples
 
+# Go concept examples
+go -C examples/lh-server/go test ./...
+
 # TypeScript concept examples
 cd examples/lh-server/typescript
 npm install
@@ -119,7 +124,7 @@ The Java examples are independent Gradle projects. The Python, Go, and .NET quic
 ```text
 examples/lh-server/java/        Java quickstart and learning path
 examples/lh-server/python/      Python quickstart
-examples/lh-server/go/          Go quickstart
+examples/lh-server/go/          Go quickstart and concept examples
 examples/lh-server/dotnet/      .NET quickstart
 examples/lh-server/typescript/  TypeScript concept examples
 examples/user-tasks-bridge/     User Tasks Bridge user-task quickstart
