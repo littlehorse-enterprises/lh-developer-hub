@@ -1,12 +1,13 @@
 package io.littlehorse.docs.interrupts;
 
+import java.util.List;
+
 import io.littlehorse.docs.ExampleSupport;
 import io.littlehorse.sdk.common.config.LHConfig;
 import io.littlehorse.sdk.wfsdk.WfRunVariable;
 import io.littlehorse.sdk.wfsdk.Workflow;
 import io.littlehorse.sdk.wfsdk.WorkflowThread;
 import io.littlehorse.sdk.worker.LHTaskWorker;
-import java.util.List;
 
 public class Main {
 
