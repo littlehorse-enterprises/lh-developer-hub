@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.littlehorse:littlehorse-client:1.2.1'
+    implementation libs.littlehorse.client
 }
 
 java {

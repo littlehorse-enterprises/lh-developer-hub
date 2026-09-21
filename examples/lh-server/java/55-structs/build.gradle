@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.littlehorse:littlehorse-client:1.2.1'
+    implementation libs.littlehorse.client
     implementation 'org.slf4j:slf4j-api:2.0.17'
     runtimeOnly 'org.slf4j:slf4j-simple:2.0.17'
 }

@@ -20,7 +20,7 @@ It registers two interrupt events:
 | `interrupt-progress` | `Integer` | Subtracts the payload from the parent's `remaining-work`. |
 | `interrupt-cancel` | `String` | Stores `CANCELLED` in the parent's `status` and sets remaining work to zero. |
 
-Each handler declares its payload as `WorkflowThread.HANDLER_INPUT_VAR`. The handler runs as a separate thread, but assignments to `remaining-work` and `status` mutate variables declared by the parent thread. Since interrupt payload types in client `1.2.1` are primitive wrapper types, this example uses `Integer` and `String` rather than a custom payload class.
+Each handler declares its payload as `WorkflowThread.HANDLER_INPUT_VAR`. The handler runs as a separate thread, but assignments to `remaining-work` and `status` mutate variables declared by the parent thread. This example uses `Integer` and `String` payloads rather than a custom payload class.
 
 After the condition is satisfied, the workflow reports the final status and completes. The workflow retains completed runs for 24 hours and thread records for one hour after termination.
 
@@ -39,10 +39,10 @@ flowchart LR
 ## Prerequisites
 
 - Java 21+
-- `lh-standalone:1.2.1` running. See the shared [server prerequisites](../../README.md).
+- A compatible LittleHorse Server running. See the shared [server setup](../../README.md#littlehorse-server-version).
 - `lhctl` configured for that server
 
-The module is independent: it uses `io.littlehorse:littlehorse-client:1.2.1`, its own Java 21 toolchain, and `new LHConfig()`. `new LHConfig()` reads the `LHC_*` environment variables.
+The module uses the shared LittleHorse client version, its own Java 21 toolchain, and `new LHConfig()`. `new LHConfig()` reads the `LHC_*` environment variables.
 
 ## Run
 

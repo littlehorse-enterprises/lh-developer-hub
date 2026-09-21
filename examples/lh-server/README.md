@@ -2,14 +2,14 @@
 
 Start here for runnable LittleHorse Server examples. The KYC quickstart is available in Java, Python, Go, and .NET; additional Java and TypeScript examples cover individual SDK concepts.
 
-## Start LittleHorse
+## LittleHorse Server Version
 
-The only infrastructure required is the LittleHorse standalone image:
+Run a compatible LittleHorse Server version of your choice. Replace `<version>` with the standalone image version you want to use:
 
 ```bash
 docker run --pull always --name lh-standalone --rm -d \
   -p 2023:2023 -p 8080:8080 -p 9092:9092 \
-  ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.2.1
+  "ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:<version>"
 ```
 
 Verify that the server is ready:
@@ -34,6 +34,25 @@ Every implementation registers the same `quickstart` WfSpec, typed correlated ev
 ## Java Learning Path
 
 The numbered names keep the examples in their recommended learning order. The examples prefer LittleHorse's typed variables, arrays, maps, and structs over `JSON_OBJ` and `JSON_ARR`.
+
+Runnable counterparts that track the Java snippets in the server concept documentation live directly under `java/`, from [`01-tasks`](./java/01-tasks/) through [`23-maps`](./java/23-maps/). Each is an independent Gradle application.
+
+### Java SDK Version
+
+All Java examples currently use LittleHorse client `1.3.0`. The version is defined once in [`../../gradle/libs.versions.toml`](../../gradle/libs.versions.toml):
+
+```toml
+[versions]
+littlehorse = "1.3.0"
+```
+
+To upgrade every Java example, change only the `littlehorse` value in that file, then verify the projects from the repository root:
+
+```bash
+./gradlew buildJavaExamples
+```
+
+The server version in [LittleHorse Server Version](#littlehorse-server-version) is configured separately and should be kept compatible with the selected client version.
 
 | Example | What you will learn |
 | --- | --- |

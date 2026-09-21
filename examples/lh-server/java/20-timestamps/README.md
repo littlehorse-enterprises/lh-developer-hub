@@ -25,7 +25,7 @@ flowchart LR
 ## Prerequisites
 
 - Java 21+
-- `lh-standalone:1.2.1` running. See the shared [server prerequisites](../../README.md).
+- A compatible LittleHorse Server running. See the shared [server setup](../../README.md#littlehorse-server-version).
 - `lhctl` configured for the same server
 
 ## Run

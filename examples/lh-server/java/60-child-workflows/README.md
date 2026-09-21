@@ -56,8 +56,8 @@ and independently inspectable.
 ## Prerequisites
 
 - Java 21.
-- A running `lh-standalone:1.2.1` LittleHorse server, as described in
-  [`examples/lh-server/README.md`](../../README.md).
+- A compatible LittleHorse Server running. See the shared
+  [server setup](../../README.md#littlehorse-server-version).
 - `lhctl` configured for that server.
 
 ## Run
@@ -163,5 +163,5 @@ customer response event run later when a WfRun reaches those nodes.
   child's `event-id`.
 - A parent remains waiting after a response when the response was published
   with the wrong event name or a non-Boolean content type.
-- A connection error means `lh-standalone:1.2.1` is not running or `LHConfig`
-  environment variables do not point at it.
+- A connection error means the configured LittleHorse Server is not running or
+  `LHConfig` environment variables do not point at it.

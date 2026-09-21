@@ -43,17 +43,8 @@ parallel: notifying the account team and provisioning the customer portal.
 
 - Java 21 or newer.
 - Docker, if running LittleHorse locally.
-- `lh-standalone:1.2.1` running. See the shared [server prerequisites](../../README.md).
+- A compatible LittleHorse Server running. See the shared [server setup](../../README.md#littlehorse-server-version).
 - `lhctl` configured for the same server, or the `LHC_*` environment variables used by `LHConfig`.
-
-Start the local server if needed:
-
-```sh
-docker run --pull always --name lh-standalone --rm -d \
-  -p 2023:2023 -p 8080:8080 -p 9092:9092 \
-  ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.2.1
-lhctl whoami
-```
 
 ## Run
 

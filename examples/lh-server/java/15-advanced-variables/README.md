@@ -33,7 +33,7 @@ flowchart LR
 
 - Java 21 or newer.
 - `lhctl` installed and configured.
-- `lh-standalone:1.2.1` running, or another compatible LittleHorse Server. See the shared [server prerequisites](../../README.md).
+- A compatible LittleHorse Server running. See the shared [server setup](../../README.md#littlehorse-server-version).
 - Verify connectivity with `lhctl whoami`.
 
 The application creates configuration with `new LHConfig()` and reads `LHC_*` environment variables for server connection settings.

@@ -35,7 +35,7 @@ After the payment event arrives, a workflow conditional routes accepted payments
 ## Prerequisites
 
 - Java 21+
-- A running LittleHorse Server as described in [`../../README.md`](../../README.md)
+- A compatible LittleHorse Server running. See the shared [server setup](../../README.md#littlehorse-server-version).
 
 ## Run the Application
 

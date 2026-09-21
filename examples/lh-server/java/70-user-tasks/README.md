@@ -29,8 +29,8 @@ the server representation of form fields.
 ## Prerequisites
 
 - Java 21.
-- A running `lh-standalone:1.2.1` LittleHorse server, as described in
-  [`examples/lh-server/README.md`](../../README.md).
+- A compatible LittleHorse Server running. See the shared
+  [server setup](../../README.md#littlehorse-server-version).
 - `lhctl` configured for that server.
 
 ## Run
@@ -111,7 +111,7 @@ happen later at runtime.
   `UserTaskDef`s or the run used the wrong tenant.
 - A notification task stuck in `SCHEDULED` means this module's worker is not
   running.
-- A connection error means `lh-standalone:1.2.1` is not running or `LHConfig`
-  environment variables are not configured for the server.
+- A connection error means the configured LittleHorse Server is not running or
+  `LHConfig` environment variables are not configured for the server.
 - A user-task command must use the composite ID values from the search result,
   not the form definition name alone.

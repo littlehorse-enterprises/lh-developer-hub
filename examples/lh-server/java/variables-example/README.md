@@ -14,7 +14,7 @@ the `send-email` task.
 
 ## Prerequisites
 - Java 21+
-- A running LittleHorse server
+- A compatible LittleHorse Server running. See the shared [server setup](../../README.md#littlehorse-server-version).
 
 ## Register wfSpec, taskDefs, and start workers
 This registers the `fetch-user` and `send-email` task defs and the
