@@ -1,6 +1,6 @@
 # LittleHorse Server Examples
 
-Start here for runnable LittleHorse Server examples. The KYC quickstart is available in Java, Python, Go, and .NET; additional Java, Go, and TypeScript examples cover individual SDK concepts.
+Start here for runnable LittleHorse Server examples. The KYC quickstart is available in Java, Python, Go, and .NET; additional Java, Python, Go, and TypeScript examples cover individual SDK concepts.
 
 ## LittleHorse Server Version
 
@@ -30,6 +30,18 @@ Every implementation registers the same `quickstart` WfSpec, typed correlated ev
 | Python | [`python/00-quickstart`](./python/00-quickstart/) |
 | Go | [`go/00-quickstart`](./go/00-quickstart/) |
 | .NET | [`dotnet/00-quickstart`](./dotnet/00-quickstart/) |
+
+## Python Concept Examples
+
+Runnable counterparts for the frozen Python snippets in the server concept documentation live under [`python/`](./python/). They share `littlehorse-client==1.3.0` through [`python/requirements.txt`](./python/requirements.txt), while the published [`python/00-quickstart`](./python/00-quickstart/) remains independent. Change the shared requirement and use any compatible server version when testing an earlier release.
+
+From the repository root, validate all numbered examples without a server:
+
+```bash
+python examples/lh-server/python/validate.py
+```
+
+Native `ARRAY` and `MAP` examples are not included because those APIs are not currently available in the Python SDK.
 
 ## Go Concept Examples
 

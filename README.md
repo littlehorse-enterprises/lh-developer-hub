@@ -8,6 +8,7 @@ Examples and coding-agent skills for building applications with [LittleHorse](ht
 | --- | --- |
 | Run my first LittleHorse workflow | [Server quickstart](./examples/lh-server/README.md#quickstart-by-language) |
 | Learn the Java SDK one concept at a time | [Java learning path](./examples/lh-server/README.md#java-learning-path) |
+| Learn the Python SDK one concept at a time | [Python concept examples](./examples/lh-server/README.md#python-concept-examples) |
 | Learn the Go SDK one concept at a time | [Go concept examples](./examples/lh-server/README.md#go-concept-examples) |
 | Browse TypeScript examples | [TypeScript concept examples](./examples/lh-server/typescript/) |
 | Build a User Tasks Bridge workflow | [User Tasks Bridge quickstart](./examples/user-tasks-bridge/00-quickstart/) |
@@ -76,7 +77,8 @@ The same quickstart is runnable in four languages:
 
 | Area | Client/server version | Additional requirements |
 | --- | --- | --- |
-| Four-language quickstart and numbered Java examples | LittleHorse `1.2.1` | Language runtime listed above |
+| Four-language quickstart | LittleHorse `1.2.1` | Language runtime listed above |
+| Java and Python concept examples | Client `1.3.0`; compatible server | Java 21+ or Python 3.10-3.13 |
 | Go concept examples | Client `1.3.0`; compatible server | Go 1.25+ |
 | TypeScript concept examples | Client `1.3.0`; compatible 1.3 server | Node.js 20+ |
 | Saddle examples | Version is environment-specific | Access to a Saddle environment |
@@ -111,6 +113,9 @@ These references cover variables, tasks, expressions, control flow, events, thre
 # Go concept examples
 go -C examples/lh-server/go test ./...
 
+# Python concept examples
+python examples/lh-server/python/validate.py
+
 # TypeScript concept examples
 cd examples/lh-server/typescript
 npm install
@@ -123,7 +128,7 @@ The Java examples are independent Gradle projects. The Python, Go, and .NET quic
 
 ```text
 examples/lh-server/java/        Java quickstart and learning path
-examples/lh-server/python/      Python quickstart
+examples/lh-server/python/      Python quickstart and concept examples
 examples/lh-server/go/          Go quickstart and concept examples
 examples/lh-server/dotnet/      .NET quickstart
 examples/lh-server/typescript/  TypeScript concept examples
