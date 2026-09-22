@@ -26,6 +26,6 @@ const workflow = Workflow.newWorkflow("greet-event", (wf) => {
 await closeOnShutdown([worker]);
 await worker.registerTaskDef();
 await workflow.registerWfSpec(config);
-console.log("Run with: lhctl run greet-event");
-console.log("Then post with: npm run external-events:post -- <wf-run-id>");
+console.log("Run with: lhctl run greet-event --wfRunId my-wf");
+console.log("Then post with: lhctl postEvent my-wf name-posted STR Obi-Wan");
 await worker.start();

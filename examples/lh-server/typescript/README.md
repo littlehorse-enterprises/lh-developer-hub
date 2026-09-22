@@ -29,10 +29,10 @@ Each main script registers its `TaskDef`s and `WfSpec`, starts its task workers,
 | Threads | `npm run threads` | `lhctl run threads-example` |
 | Child Workflows | `npm run child-workflows` | `lhctl run greeting-parent input-name "Obi-Wan"` |
 | Exception Handling | `npm run exceptions` | `lhctl run exception-example price 50.0` |
-| External Events | `npm run external-events` | Start a run, then `npm run external-events:post -- <wf-run-id>` |
-| Interrupts | `npm run interrupts` | Start `my-wf`, then `npm run interrupts:post -- my-wf` |
-| Correlated Events | `npm run correlated-events` | Start a run, then `npm run correlated-events:post` |
-| User Tasks | `npm run user-tasks` | `npm run user-tasks:run` |
+| External Events | `npm run external-events` | `lhctl run greet-event --wfRunId my-wf`, then `lhctl postEvent my-wf name-posted STR Obi-Wan` |
+| Interrupts | `npm run interrupts` | Run `collect-underpants`, then post the events shown in its concept README |
+| Correlated Events | `npm run correlated-events` | Run `correlated-event-example`, then post the correlated event shown in its concept README |
+| User Tasks | `npm run user-tasks` | Run `favorite-player-demo`, then complete its UserTaskRun |
 | StructDefs | `npm run structdefs` | `npm run structdefs:run` |
 | Arrays | `npm run arrays` | Use the printed `lhctl run` command |
 | Maps | `npm run maps` | Use the printed `lhctl run` command |

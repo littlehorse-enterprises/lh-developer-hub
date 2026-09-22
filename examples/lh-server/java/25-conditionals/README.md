@@ -36,7 +36,7 @@ flowchart TD
 ## Prerequisites
 
 - Java 21+
-- An accessible LittleHorse Server running. See the shared [server prerequisites](../../README.md).
+- A compatible LittleHorse Server running. See the shared [server setup](../../README.md#littlehorse-server-version).
 - `lhctl` configured for the same server
 
 ## Run

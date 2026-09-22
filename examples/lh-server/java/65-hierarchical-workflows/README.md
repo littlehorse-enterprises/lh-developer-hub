@@ -24,8 +24,8 @@ same variable with `.asInherited()`. The child changes that shared variable to
 ## Prerequisites
 
 - Java 21.
-- A running `lh-standalone:1.2.1` LittleHorse server, as described in
-  [`examples/lh-server/README.md`](../../README.md).
+- A compatible LittleHorse Server running. See the shared
+  [server setup](../../README.md#littlehorse-server-version).
 - `lhctl` configured for that server.
 
 ## Run
@@ -78,5 +78,5 @@ runtime code executed later by the task worker.
 - A parent-ID validation error means the `--parentWfRunId` points to the wrong
   WfSpec or the parent WfSpec was not registered first.
 - `TASK_NOT_FOUND` or a stuck run means the application worker is not running.
-- A connection error means `lh-standalone:1.2.1` is not running or `LHConfig`
-  environment variables are not configured for the server.
+- A connection error means the configured LittleHorse Server is not running or
+  `LHConfig` environment variables are not configured for the server.

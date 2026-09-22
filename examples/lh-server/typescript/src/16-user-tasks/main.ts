@@ -46,5 +46,9 @@ const workflow = Workflow.newWorkflow("favorite-player-demo", (wf) => {
 await closeOnShutdown([worker]);
 await worker.registerTaskDef();
 await workflow.registerWfSpec(config);
-console.log("Run and complete automatically with: npm run user-tasks:run");
+console.log("Run with: lhctl run favorite-player-demo user-id obiwan");
+console.log(
+  "Then search with: lhctl search userTaskRun --userTaskDefName report-favorite-player --userId obiwan",
+);
+console.log("Complete with: lhctl execute userTaskRun <WfRunId> <Guid>");
 await worker.start();

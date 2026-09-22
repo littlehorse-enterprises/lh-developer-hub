@@ -4,7 +4,7 @@ This example is split into four separate runs so you can migrate a workflow in s
 
 ## Prerequisites
 - Java 21+
-- A running LittleHorse server
+- A compatible LittleHorse Server running. See the shared [server setup](../../README.md#littlehorse-server-version).
 
 ## Step 1: Register wfSpecs, taskDefs, and workers
 This registers task defs, external events, and old/new workflow versions.

@@ -20,13 +20,13 @@ Run the workflow:
 lhctl run favorite-player-demo user-id obiwan
 ```
 
-Search for the User Task:
+Search for the User Task to get its `WfRunId` and `Guid`:
 ```bash
 lhctl search userTaskRun --userTaskDefName report-favorite-player --userId obiwan
 ```
 
-Complete the User Task:
+Complete the User Task using those values:
 
 ```bash
-lhctl execute userTaskRun <WfRunId> <GUID>
+lhctl execute userTaskRun <WfRunId> <Guid>
 ```

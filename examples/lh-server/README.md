@@ -1,15 +1,15 @@
 # LittleHorse Server Examples
 
-Start here for runnable LittleHorse Server examples. The KYC quickstart is available in Java, Python, Go, and .NET; additional Java and TypeScript examples cover individual SDK concepts.
+Start here for runnable LittleHorse Server examples. The KYC quickstart is available in Java, Python, Go, and .NET; additional Java, Python, Go, and TypeScript examples cover individual SDK concepts.
 
-## Start LittleHorse
+## LittleHorse Server Version
 
-The only infrastructure required is the LittleHorse standalone image:
+Run a compatible LittleHorse Server version of your choice. Replace `<version>` with the standalone image version you want to use:
 
 ```bash
 docker run --pull always --name lh-standalone --rm -d \
   -p 2023:2023 -p 8080:8080 -p 9092:9092 \
-  ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.2.1
+  "ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:<version>"
 ```
 
 Verify that the server is ready:
@@ -31,9 +31,53 @@ Every implementation registers the same `quickstart` WfSpec, typed correlated ev
 | Go | [`go/00-quickstart`](./go/00-quickstart/) |
 | .NET | [`dotnet/00-quickstart`](./dotnet/00-quickstart/) |
 
+## Python Concept Examples
+
+Runnable counterparts for the frozen Python snippets in the server concept documentation live under [`python/`](./python/). They share `littlehorse-client==1.3.0` through [`python/requirements.txt`](./python/requirements.txt), while the published [`python/00-quickstart`](./python/00-quickstart/) remains independent. Change the shared requirement and use any compatible server version when testing an earlier release.
+
+From the repository root, validate all numbered examples without a server:
+
+```bash
+python examples/lh-server/python/validate.py
+```
+
+Native `ARRAY` and `MAP` examples are not included because those APIs are not currently available in the Python SDK.
+
+## Go Concept Examples
+
+Runnable counterparts for the Go snippets in the server concept documentation live under [`go/`](./go/). Each concept keeps task functions in `tasks.go`, workflow definitions in `workflow.go`, and setup in `main.go`.
+
+The concept examples share LittleHorse Go SDK `v1.3.0` through [`go/go.mod`](./go/go.mod). To change the version, update that file and then verify the shared module from the repository root:
+
+```bash
+go -C examples/lh-server/go mod tidy
+go -C examples/lh-server/go test ./...
+```
+
+The existing [`go/00-quickstart`](./go/00-quickstart/) remains an independent module because its commands are also published on the LittleHorse website. Native `ARRAY` and `MAP` examples are not included because those APIs are not currently available in the Go SDK.
+
 ## Java Learning Path
 
 The numbered names keep the examples in their recommended learning order. The examples prefer LittleHorse's typed variables, arrays, maps, and structs over `JSON_OBJ` and `JSON_ARR`.
+
+Runnable counterparts that track the Java snippets in the server concept documentation live directly under `java/`, from [`01-tasks`](./java/01-tasks/) through [`23-maps`](./java/23-maps/). Each is an independent Gradle application.
+
+### Java SDK Version
+
+All Java examples currently use LittleHorse client `1.3.0`. The version is defined once in [`../../gradle/libs.versions.toml`](../../gradle/libs.versions.toml):
+
+```toml
+[versions]
+littlehorse = "1.3.0"
+```
+
+To upgrade every Java example, change only the `littlehorse` value in that file, then verify the projects from the repository root:
+
+```bash
+./gradlew buildJavaExamples
+```
+
+The server version in [LittleHorse Server Version](#littlehorse-server-version) is configured separately and should be kept compatible with the selected client version.
 
 | Example | What you will learn |
 | --- | --- |

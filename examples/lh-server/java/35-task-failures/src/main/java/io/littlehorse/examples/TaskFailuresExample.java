@@ -1,5 +1,7 @@
 package io.littlehorse.examples;
 
+import java.util.List;
+
 import io.littlehorse.sdk.common.config.LHConfig;
 import io.littlehorse.sdk.common.proto.WorkflowRetentionPolicy;
 import io.littlehorse.sdk.wfsdk.NodeOutput;
@@ -7,7 +9,6 @@ import io.littlehorse.sdk.wfsdk.WfRunVariable;
 import io.littlehorse.sdk.wfsdk.Workflow;
 import io.littlehorse.sdk.wfsdk.WorkflowThread;
 import io.littlehorse.sdk.worker.LHTaskWorker;
-import java.util.List;
 
 public class TaskFailuresExample {
 
@@ -41,7 +42,7 @@ public class TaskFailuresExample {
             WfRunVariable content = handler.declareStr(WorkflowThread.HANDLER_INPUT_VAR);
             handler.doIf(content.isEqualTo(INSUFFICIENT_FUNDS_CONTENT), insufficientFunds ->
                             insufficientFunds.execute(HANDLE_INSUFFICIENT_FUNDS_TASK, content))
-                    .doElse(content.isEqualTo(INVALID_CREDIT_CARD_CONTENT), invalidCreditCard ->
+                    .doElseIf(content.isEqualTo(INVALID_CREDIT_CARD_CONTENT), invalidCreditCard ->
                             invalidCreditCard.execute(HANDLE_INVALID_CREDIT_CARD_TASK, content));
         });
 

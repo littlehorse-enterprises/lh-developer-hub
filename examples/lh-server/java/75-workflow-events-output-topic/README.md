@@ -27,9 +27,9 @@ it later.
 ## Prerequisites
 
 - Java 21.
-- A running `lh-standalone:1.2.1` LittleHorse server, as described in
-  [`examples/lh-server/README.md`](../../README.md). The standalone image must
-  expose Kafka at `localhost:9092` from the machine running this example.
+- A compatible LittleHorse Server running. See the shared
+  [server setup](../../README.md#littlehorse-server-version). A local standalone
+  image must expose Kafka at `localhost:9092` from the machine running this example.
 - `lhctl` configured for that server.
 - Kafka output topics enabled by this application for the selected tenant.
 
@@ -109,7 +109,7 @@ that observes the event after the server executes that node.
   `<cluster>_<tenant>_execution` convention; set `LH_OUTPUT_TOPIC` explicitly.
 - A Kafka connection error means Kafka is not exposed by `lh-standalone` at the
   configured `LH_KAFKA_BOOTSTRAP_SERVERS` address.
-- A server connection error means `lh-standalone:1.2.1` is not running or
-  `LHConfig` environment variables are not configured.
+- A server connection error means the configured LittleHorse Server is not
+  running or `LHConfig` environment variables are not configured.
 - This module has no task worker because the workflow contains no task nodes;
   adding a worker will not fix a Kafka or output-topic configuration problem.

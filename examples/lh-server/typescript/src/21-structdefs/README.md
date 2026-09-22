@@ -1,6 +1,6 @@
 # StructDefs
 
-This example defines named Zod structures with `lhStruct`, registers their dependencies as LittleHorse `StructDef`s, uses a struct as task input, and declares a typed workflow variable.
+This example defines the documented `Car` Zod structure with `lhStruct`, registers it as a LittleHorse `StructDef`, uses it as task input, and declares the typed `input-car` workflow variable.
 
 ## Run
 

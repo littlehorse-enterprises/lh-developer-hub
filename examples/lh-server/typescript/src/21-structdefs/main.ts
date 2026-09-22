@@ -1,16 +1,15 @@
 import {
   buildPutStructDefRequest,
   createTaskWorker,
-  getStructDependencies,
   LHConfig,
   Workflow,
 } from "littlehorse-client";
 import { z } from "zod";
 import { closeOnShutdown } from "../config.js";
-import { Car, Person } from "./schemas.js";
+import { Car } from "./schemas.js";
 
 function describeCar(car: z.infer<typeof Car>): string {
-  return `You drive a ${car.make} ${car.model} from ${car.year}`;
+  return `You drive a ${car.make} ${car.model}`;
 }
 
 const config = LHConfig.from({});
@@ -21,14 +20,6 @@ const worker = createTaskWorker(describeCar, "describe-car", config, {
 });
 
 await client.putStructDef(buildPutStructDefRequest(Car));
-
-for (const schema of getStructDependencies(Person)) {
-  try {
-    await client.putStructDef(buildPutStructDefRequest(schema));
-  } catch (error) {
-    if ((error as { code?: string }).code !== "ALREADY_EXISTS") throw error;
-  }
-}
 
 const workflow = Workflow.newWorkflow("quickstart", (wf) => {
   const inputCar = wf.declareStruct("input-car", Car).required();

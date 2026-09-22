@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:3.5.5'
-    implementation 'io.littlehorse:littlehorse-client:1.2.1'
+    implementation libs.littlehorse.client
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.5.5'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
