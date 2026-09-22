@@ -12,3 +12,5 @@ From the repository root:
 go -C examples/lh-server/go run ./16-user-tasks
 lhctl run favorite-player-demo user-id obiwan
 ```
+
+The completed field values remain available on the UserTaskRun. LittleHorse Go SDK 1.3.0 does not preserve typed user-task field selectors when compiling against current servers, so the downstream task receives the assignee ID rather than individual form fields.

@@ -10,5 +10,7 @@ From the repository root:
 
 ```bash
 ./gradlew :examples:lh-server:java:21-structdefs:run
-lhctl run structdef-example input-car '{"make":"Incom","model":"T-65 X-wing","year":1977}'
+./gradlew :examples:lh-server:java:21-structdefs:run --args=run
 ```
+
+The second command creates `new Car("Pontiac", "Aztek", 2005)`, converts it with `LHLibUtil.objToVarVal()`, and runs the `quickstart` WfSpec exactly as shown on the website.

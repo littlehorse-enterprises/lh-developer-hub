@@ -7,4 +7,5 @@ From the repository root, complete the [shared Python setup](../README.md), then
 ```bash
 python examples/lh-server/python/02-workflows/main.py register
 python examples/lh-server/python/02-workflows/main.py workers
+lhctl run quickstart name "Obi-Wan"
 ```

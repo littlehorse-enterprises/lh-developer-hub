@@ -10,5 +10,7 @@ From the repository root:
 
 ```bash
 ./gradlew :examples:lh-server:java:22-arrays:run
-lhctl run arrays-example my-array '[1,2,3]' value-to-check 3
+lhctl run arrays-example value-to-check 3
 ```
+
+The `produce-array` task populates `my-array`, so only `value-to-check` is required when starting the workflow.

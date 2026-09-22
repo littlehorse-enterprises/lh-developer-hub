@@ -7,4 +7,5 @@ From the repository root, complete the [shared Python setup](../README.md), then
 ```bash
 python examples/lh-server/python/07-child-workflows/main.py register
 python examples/lh-server/python/07-child-workflows/main.py workers
+lhctl run greeting-parent input-name "Obi-Wan"
 ```

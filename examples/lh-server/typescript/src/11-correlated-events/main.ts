@@ -33,5 +33,7 @@ await closeOnShutdown([worker]);
 await worker.registerTaskDef();
 await workflow.registerWfSpec(config);
 console.log("Run with: lhctl run correlated-event-example document-id my-document-abc123");
-console.log("Then post with: npm run correlated-events:post");
+console.log(
+  'Then post with: lhctl put correlatedEvent my-document-abc123 document-signed STR "Obi-Wan Kenobi"',
+);
 await worker.start();

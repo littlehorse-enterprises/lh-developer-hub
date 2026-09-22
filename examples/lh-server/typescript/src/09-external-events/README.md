@@ -13,17 +13,11 @@ npm run external-events
 In another terminal, start a workflow:
 
 ```bash
-lhctl run collect-underpants --wfRunId my-wf all-underpants '[]'
-```
-Now send external events to trigger interrupts:
-
-```bash
-lhctl postEvent my-wf underpant-collected STR anakin
-lhctl postEvent my-wf underpant-collected STR yoda
+lhctl run greet-event --wfRunId my-wf
 ```
 
-Now send the external event that will advance the workflow:
+Send the string payload that the workflow passes to the `greet` task:
 
 ```bash
-lhctl postEvent my-wf done-collecting-underpants STR done!
+lhctl postEvent my-wf name-posted STR Obi-Wan
 ```

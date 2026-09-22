@@ -11,6 +11,6 @@ From the repository root:
 ```bash
 go -C examples/lh-server/go run ./10-interrupts
 lhctl run collect-underpants --wfRunId my-run all-underpants '[]'
-lhctl postEvent my-run underpant-collected 'Stan'
+lhctl postEvent my-run underpant-collected STR Stan
 lhctl postEvent my-run done-collecting-underpants
 ```

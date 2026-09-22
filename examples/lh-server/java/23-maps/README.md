@@ -1,6 +1,6 @@
 # Maps
 
-Declares native typed maps and demonstrates merge and key-removal mutations.
+Runs a `produce-map` task and assigns its native `Map<String, Long>` output to the workflow's `my-map` variable.
 
 ## Prerequisites
 
@@ -10,5 +10,5 @@ From the repository root:
 
 ```bash
 ./gradlew :examples:lh-server:java:23-maps:run
-lhctl run maps-example scores '{"alice":10}' scores-to-merge '{"bob":20}' key-to-remove alice
+lhctl run maps-example
 ```

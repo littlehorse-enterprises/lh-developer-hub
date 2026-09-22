@@ -7,4 +7,6 @@ From the repository root, complete the [shared Python setup](../README.md), then
 ```bash
 python examples/lh-server/python/09-external-events/main.py register
 python examples/lh-server/python/09-external-events/main.py workers
+lhctl run external-event-example --wfRunId my-run
+lhctl postEvent my-run name-posted STR Obi-Wan
 ```

@@ -7,4 +7,5 @@ From the repository root, complete the [shared Python setup](../README.md), then
 ```bash
 python examples/lh-server/python/06-threads/main.py register
 python examples/lh-server/python/06-threads/main.py workers
+lhctl run threads-example
 ```

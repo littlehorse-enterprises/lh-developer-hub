@@ -1,6 +1,7 @@
 package io.littlehorse.docs.interrupts;
 
 import io.littlehorse.sdk.worker.LHTaskMethod;
+import java.util.List;
 
 public class UnderpantsTasks {
 
@@ -17,8 +18,8 @@ public class UnderpantsTasks {
     }
 
     @LHTaskMethod("profit")
-    public String profit(Object[] underpants) {
-        String result = "Collected " + underpants.length + " underpants!";
+    public String profit(List<String> underpants) {
+        String result = "Collected " + underpants.size() + " underpants!";
         System.out.println(result);
         return result;
     }

@@ -2,8 +2,8 @@ package main
 
 import "fmt"
 
-func reportFavoritePlayer(user, team string, player int) string {
-	result := fmt.Sprintf("%s's favorite player is #%d on the %s team!", user, player, team)
+func reportFavoritePlayer(user string) string {
+	result := fmt.Sprintf("%s completed the favorite-player report", user)
 	fmt.Println(result)
 	return result
 }

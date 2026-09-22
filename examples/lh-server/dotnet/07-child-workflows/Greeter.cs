@@ -5,10 +5,10 @@ namespace ChildWorkflowsExample;
 public class Greeter
 {
     [LHTaskMethod("greet")]
-    public string Greet(string name)
+    public Task<string> Greet(string name)
     {
         string result = $"Hello, {name}!";
         Console.WriteLine(result);
-        return result;
+        return Task.FromResult(result);
     }
 }

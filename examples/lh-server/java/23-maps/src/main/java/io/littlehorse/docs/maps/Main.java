@@ -1,26 +1,30 @@
 package io.littlehorse.docs.maps;
 
+import java.util.List;
+
+import io.littlehorse.docs.ExampleSupport;
 import io.littlehorse.sdk.common.config.LHConfig;
+import io.littlehorse.sdk.wfsdk.NodeOutput;
 import io.littlehorse.sdk.wfsdk.WfRunVariable;
 import io.littlehorse.sdk.wfsdk.Workflow;
 import io.littlehorse.sdk.wfsdk.WorkflowThread;
+import io.littlehorse.sdk.worker.LHTaskWorker;
 
 public class Main {
 
     public static void wfLogic(WorkflowThread wf) {
-        WfRunVariable scores = wf.declareMap("scores", String.class, Long.class).required();
-        WfRunVariable scoresToMerge = wf.declareMap("scores-to-merge", String.class, Long.class).required();
-        WfRunVariable keyToRemove = wf.declareStr("key-to-remove").required();
-
-        scores.assign(scores.extend(scoresToMerge));
-        scores.assign(scores.removeKey(keyToRemove));
-        wf.declareMap("scores-by-team", String.class, Long[].class);
+        WfRunVariable myMap = wf.declareMap("my-map", String.class, Long.class);
+        NodeOutput produced = wf.execute("produce-map");
+        myMap.assign(produced);
     }
 
     public static void main(String[] args) {
         LHConfig config = new LHConfig();
+        MapTasks tasks = new MapTasks();
+        LHTaskWorker worker = new LHTaskWorker(tasks, "produce-map", config);
         Workflow workflow = Workflow.newWorkflow("maps-example", Main::wfLogic);
-        workflow.registerWfSpec(config);
-        System.out.println("Run with: lhctl run maps-example scores '{\"alice\":10}' scores-to-merge '{\"bob\":20}' key-to-remove alice");
+
+        System.out.println("Run with: lhctl run maps-example");
+        ExampleSupport.start(config, List.of(worker), workflow);
     }
 }

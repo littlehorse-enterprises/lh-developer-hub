@@ -7,4 +7,5 @@ From the repository root, complete the [shared Python setup](../README.md), then
 ```bash
 python examples/lh-server/python/21-structdefs/main.py register
 python examples/lh-server/python/21-structdefs/main.py workers
+lhctl run quickstart input-car '{"make":"Pontiac","model":"Aztek","year":2005}'
 ```

@@ -1,8 +1,8 @@
-async def fetch_user(user_id: str) -> str:
+async def fetch_contact_method(user_id: str) -> str:
     return "COMLINK" if user_id in ["obiwan", "padme", "satine"] else "HOLOGRAM"
 
 
-async def send_comlink(user_id: str, message: str) -> str:
+async def send_comlink_message(user_id: str, message: str) -> str:
     result = "sent comlink " + message + " to user " + user_id
     print(result)
     return result

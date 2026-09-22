@@ -10,5 +10,5 @@ From the repository root:
 
 ```bash
 go -C examples/lh-server/go run ./21-structdefs
-lhctl run structdef-example input-car '{"make":"Incom","model":"T-65 X-wing","year":1977}'
+lhctl run quickstart inputCar '{"make":"Pontiac","model":"Aztek","year":2005}'
 ```

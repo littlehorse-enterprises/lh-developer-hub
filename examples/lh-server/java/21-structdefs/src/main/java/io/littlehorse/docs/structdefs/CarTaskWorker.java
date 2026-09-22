@@ -2,7 +2,7 @@ package io.littlehorse.docs.structdefs;
 
 import io.littlehorse.sdk.worker.LHTaskMethod;
 
-public class CarTasks {
+public class CarTaskWorker {
 
     @LHTaskMethod("describe-car")
     public String describeCar(Car car) {

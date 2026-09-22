@@ -3,12 +3,16 @@ import sys
 
 import littlehorse
 from littlehorse.config import LHConfig
+from littlehorse.model import PutExternalEventDefRequest
 from littlehorse.worker import LHTaskWorker
 from tasks import greet
-from workflow import get_workflow
+from workflow import EXTERNAL_EVENT_NAME, get_workflow
 
 
 def register(config: LHConfig) -> None:
+    config.stub().PutExternalEventDef(
+        PutExternalEventDefRequest(name=EXTERNAL_EVENT_NAME)
+    )
     littlehorse.create_task_def(greet, "greet", config)
     littlehorse.create_workflow_spec(get_workflow(), config)
 

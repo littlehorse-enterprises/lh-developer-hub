@@ -11,5 +11,5 @@ From the repository root:
 ```bash
 go -C examples/lh-server/go run ./09-external-events
 lhctl run greet-event --wfRunId my-run
-lhctl postEvent my-run name-posted 'Obi-Wan'
+lhctl postEvent my-run name-posted STR Obi-Wan
 ```

@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.littlehorse.docs.ExampleSupport;
 import io.littlehorse.sdk.common.config.LHConfig;
+import io.littlehorse.sdk.common.proto.PutExternalEventDefRequest;
 import io.littlehorse.sdk.wfsdk.WfRunVariable;
 import io.littlehorse.sdk.wfsdk.Workflow;
 import io.littlehorse.sdk.wfsdk.WorkflowThread;
@@ -33,8 +34,12 @@ public class Main {
             new LHTaskWorker(tasks, "profit", config));
         Workflow workflow = Workflow.newWorkflow("collect-underpants", Main::wfLogic);
 
+        config.getBlockingStub().putExternalEventDef(PutExternalEventDefRequest.newBuilder()
+            .setName("done-collecting-underpants")
+            .build());
+
         System.out.println("Run with: lhctl run collect-underpants --wfRunId my-wf all-underpants '[]'");
-        System.out.println("Then post with: lhctl postEvent my-wf underpant-collected 'Stan'");
+        System.out.println("Then post with: lhctl postEvent my-wf underpant-collected STR Stan");
         ExampleSupport.start(config, workers, workflow);
     }
 }

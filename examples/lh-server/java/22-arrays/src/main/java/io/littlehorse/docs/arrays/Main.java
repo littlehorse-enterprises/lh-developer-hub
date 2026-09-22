@@ -13,7 +13,7 @@ import io.littlehorse.sdk.worker.LHTaskWorker;
 public class Main {
 
     public static void wfLogic(WorkflowThread wf) {
-        WfRunVariable numbers = wf.declareArray("my-array", Long.class).required();
+        WfRunVariable numbers = wf.declareArray("my-array", Long.class);
         WfRunVariable valueToCheck = wf.declareInt("value-to-check").required();
         WfRunVariable arraySize = wf.declareInt("array-size");
 

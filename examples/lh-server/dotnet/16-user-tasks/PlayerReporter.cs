@@ -15,10 +15,10 @@ public class FavoritePlayerForm
 public class PlayerReporter
 {
     [LHTaskMethod("report-favorite-player")]
-    public string ReportFavoritePlayer(string user, string team, int player)
+    public Task<string> ReportFavoritePlayer(string user, string team, int player)
     {
         string result = $"{user}'s favorite player is # {player} on the {team} team!";
         Console.WriteLine(result);
-        return result;
+        return Task.FromResult(result);
     }
 }

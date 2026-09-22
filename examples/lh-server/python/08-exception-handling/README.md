@@ -7,4 +7,5 @@ From the repository root, complete the [shared Python setup](../README.md), then
 ```bash
 python examples/lh-server/python/08-exception-handling/main.py register
 python examples/lh-server/python/08-exception-handling/main.py workers
+lhctl run exception-example price 50.0
 ```

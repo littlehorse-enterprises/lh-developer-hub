@@ -14,7 +14,9 @@ In another terminal, start the named run and post the sample interrupt sequence:
 
 ```bash
 lhctl run collect-underpants --wfRunId my-wf all-underpants '[]'
-npm run interrupts:post -- my-wf
+lhctl postEvent my-wf underpant-collected STR anakin
+lhctl postEvent my-wf underpant-collected STR yoda
+lhctl postEvent my-wf done-collecting-underpants
 ```
 
-The posting script sends three `underpant-collected` events followed by `done-collecting-underpants`, allowing the main thread to finish.
+The `underpant-collected` events invoke the interrupt handler. The payload-free `done-collecting-underpants` event allows the main thread to finish.

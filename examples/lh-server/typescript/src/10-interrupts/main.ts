@@ -57,5 +57,6 @@ await closeOnShutdown(workers);
 await Promise.all(workers.map((worker) => worker.registerTaskDef()));
 await workflow.registerWfSpec(config);
 console.log("Run with: lhctl run collect-underpants --wfRunId my-wf all-underpants '[]'");
-console.log("Then post with: npm run interrupts:post -- my-wf");
+console.log("Then post interrupts with: lhctl postEvent my-wf underpant-collected STR anakin");
+console.log("Finish with: lhctl postEvent my-wf done-collecting-underpants");
 await Promise.all(workers.map((worker) => worker.start()));
