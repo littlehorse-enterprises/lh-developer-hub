@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd -- "$SCRIPT_DIR/../../.." && pwd)"
-export OLLAMA_MODEL="${OLLAMA_MODEL:-qwen3:4b}"
+export OLLAMA_MODEL="${OLLAMA_MODEL:-qwen3:1.7b}"
 COMPOSE=(docker compose --project-name lh-agent-quickstart --file "$SCRIPT_DIR/compose.yaml")
 
 if [[ "${1:-}" == "--clean" && $# == 1 ]]; then

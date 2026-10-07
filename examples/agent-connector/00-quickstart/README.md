@@ -13,7 +13,7 @@ The [website walkthrough](https://littlehorse.io/docs/getting-started/agent-conn
 - Docker with Docker Compose v2 and a running Docker daemon.
 - Java 21 and `lhctl` 1.3.0 or newer. See the [system setup guide](https://littlehorse.io/docs/getting-started/quickstart#system-setup) for installation instructions.
 - Internet access for images, Gradle dependencies, the model download, and the third-party MCP endpoint.
-- Enough Docker memory and disk space for LittleHorse, the Java connector, and `qwen3:4b`. Its model download is approximately 2.5 GB; inference requires additional memory. CPU-only inference can be slow.
+- Enough Docker memory and disk space for LittleHorse, the Java connector, and `qwen3:1.7b`. Its model download is approximately 1.4 GB; inference requires additional memory. CPU-only inference can be slow.
 - Host ports `2023` and `8080` must be free. Stop any earlier standalone LittleHorse container first.
 
 No host Ollama installation or paid model API key is needed. Ollama runs inside Compose on CPU by default, with no host port exposed. These instructions target a local plaintext server; use a shell without cloud-specific `LHC_*` authentication settings.
@@ -26,7 +26,7 @@ From the Developer Hub repository root:
 ./examples/agent-connector/00-quickstart/setup.sh
 ```
 
-The script starts LittleHorse Server, Dashboard, and Kafka using `ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.3.0`, starts Ollama, and pulls `qwen3:4b`. It then starts `ghcr.io/littlehorse-enterprises/lh-agent-connector:1.3.0`, waits for the connector's `text-to-text-agent` TaskDef, and runs the Java SDK 1.3.0 registration program to install `text-to-text-example`. All services remain running in the background. Nothing compiles the connector, and the script does not start a WfRun.
+The script starts LittleHorse Server, Dashboard, and Kafka using `ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.3.0`, starts Ollama, and pulls `qwen3:1.7b`. It then starts `ghcr.io/littlehorse-enterprises/lh-agent-connector:1.3.0`, waits for the connector's `text-to-text-agent` TaskDef, and runs the Java SDK 1.3.0 registration program to install `text-to-text-example`. All services remain running in the background. Nothing compiles the connector, and the script does not start a WfRun.
 
 The setup can be rerun. Ollama models are cached in a Compose volume. The Ollama image uses `latest`; the LittleHorse and connector images and Java SDK are pinned to `1.3.0`.
 
@@ -38,10 +38,10 @@ The connector uses Ollama's OpenAI-compatible API at `http://ollama:11434/v1`, w
 
 The MCP endpoint is `https://gateway.mcpservers.org/yahoo-finance/mcp`. Only the server-side `get_quote` tool is included, appearing to the model as `yahoo_get_quote`. Filtering happens before the client prefix is added. The endpoint is a third-party service, not an officially supported Yahoo Finance MCP server; its availability and data are outside LittleHorse's control. Its catalog loads lazily, so successful setup does not prove that a subsequent tool call will succeed.
 
-We retain `qwen3:4b` because this example requires tool selection and instruction following. Smaller models have not been verified for this scenario. To experiment, select a model for both provisioning and connector configuration with the same variable:
+The default `qwen3:1.7b` reduces the model download size, but its tool selection and instruction following have not been verified for this scenario. To try the larger `qwen3:4b` model (approximately 2.5 GB), select it for both provisioning and connector configuration with the same variable:
 
 ```bash
-OLLAMA_MODEL=qwen3:1.7b ./examples/agent-connector/00-quickstart/setup.sh
+OLLAMA_MODEL=qwen3:4b ./examples/agent-connector/00-quickstart/setup.sh
 ```
 
 ## Run The Workflow
