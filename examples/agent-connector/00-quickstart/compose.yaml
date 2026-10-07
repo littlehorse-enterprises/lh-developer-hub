@@ -1,0 +1,58 @@
+services:
+  littlehorse:
+    image: ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.3.0
+    environment:
+      LHS_LISTENERS: EXTERNAL:2023,INTERNAL:2024
+      LHS_LISTENERS_PROTOCOL_MAP: EXTERNAL:PLAIN,INTERNAL:PLAIN
+      LHS_ADVERTISED_LISTENERS: EXTERNAL://localhost:2023,INTERNAL://littlehorse:2024
+    ports:
+      - "127.0.0.1:2023:2023"
+      - "127.0.0.1:8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1822/readiness"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+      start_period: 10s
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama-models:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+      start_period: 10s
+
+  agent:
+    image: ghcr.io/littlehorse-enterprises/lh-agent-connector:1.3.0
+    depends_on:
+      littlehorse:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    environment:
+      LHC_API_HOST: littlehorse
+      LHC_API_PORT: "2024"
+      LHC_API_PROTOCOL: PLAINTEXT
+      QUARKUS_LOG_CONSOLE_JSON_ENABLED: "false"
+      AGENT_TASK_NAME: text-to-text-agent
+      AGENT_TASK_INPUT_TYPE: TEXT
+      AGENT_TASK_OUTPUT_TYPE: TEXT
+      AGENT_SYSTEM_MESSAGE: >-
+        You are a financial research assistant. You must use the available Yahoo Finance tools before answering questions about current or historical market data. Never answer those questions from model knowledge alone. If a request requires a Yahoo Finance capability that is not available, or if a tool fails, clearly explain that limitation instead of using an unrelated tool or guessing.
+      AGENT_CHAT_MODEL_PROVIDER: openai
+      AGENT_CHAT_MODEL_OPENAI_API_KEY: ollama
+      AGENT_CHAT_MODEL_OPENAI_BASE_URL: http://ollama:11434/v1
+      AGENT_CHAT_MODEL_OPENAI_MODEL: ${OLLAMA_MODEL:-qwen3:4b}
+      AGENT_CHAT_MODEL_OPENAI_TIMEOUT: PT4M
+      AGENT_CHAT_MODEL_OPENAI_MAX_RETRIES: "1"
+      AGENT_MCP_CLIENTS_YAHOO_TRANSPORT: streamable-http
+      AGENT_MCP_CLIENTS_YAHOO_URL: https://gateway.mcpservers.org/yahoo-finance/mcp
+      AGENT_MCP_CLIENTS_YAHOO_TOOLS_MODE: include
+      AGENT_MCP_CLIENTS_YAHOO_TOOLS_NAMES: get_quote
+
+volumes:
+  ollama-models:

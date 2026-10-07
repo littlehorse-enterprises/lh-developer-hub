@@ -14,6 +14,7 @@ Examples and coding-agent skills for building applications with [LittleHorse](ht
 | Build a User Tasks Bridge workflow | [User Tasks Bridge quickstart](./examples/user-tasks-bridge/00-quickstart/) |
 | Build with the LittleHorse Quarkus extension | [Quarkus quickstart](./examples/lh-quarkus/00-quickstart/) |
 | Start workflows from Kafka records | [Kafka Connect quickstart](./examples/kafka-connectors/00-quickstart/) |
+| Invoke an AI agent from a workflow | [Agent Connector quickstart](./examples/agent-connector/00-quickstart/) |
 | Give a coding agent LittleHorse SDK guidance | [WfSpec skills](./skills/) |
 | Build with Saddle | [Saddle quickstart](./examples/saddle/00-quickstart/) |
 | Produce or consume Saddle Streamlets | [Streamlet quickstart](./examples/saddle/05-streamlet/) |
@@ -81,6 +82,7 @@ The same quickstart is runnable in four languages:
 | Java and Python concept examples | Client `1.3.0`; compatible server | Java 21+ or Python 3.10-3.13 |
 | Go concept examples | Client `1.3.0`; compatible server | Go 1.25+ |
 | TypeScript concept examples | Client `1.3.0`; compatible 1.3 server | Node.js 20+ |
+| Agent Connector quickstart | Connector, server, and Java client `1.3.0` | Java 21, Docker Compose, `lhctl`, and local model resources |
 | Saddle examples | Version is environment-specific | Access to a Saddle environment |
 
 LittleHorse clients read `LHC_*` environment variables. The same example code can connect to the local standalone server, another LittleHorse deployment, or LittleHorse Cloud when those variables are configured.
@@ -92,6 +94,8 @@ The [LittleHorse Server examples guide](./examples/lh-server/README.md) contains
 [User Tasks Bridge](./examples/user-tasks-bridge/00-quickstart/) demonstrates identity-backed user tasks, the [Quarkus extension](./examples/lh-quarkus/00-quickstart/) manages workflow and worker lifecycles in a Quarkus application, and [Kafka Connect](./examples/kafka-connectors/00-quickstart/) starts workflows from Kafka records.
 
 [Saddle](./examples/saddle/) adds managed workflow and streaming services around LittleHorse. Start with its Workflow Builder quickstart, then continue to the schema-backed Streamlet producer and consumer.
+
+[Agent Connector](./examples/agent-connector/00-quickstart/) runs a prebuilt AI-agent worker with a local Ollama model and a restricted MCP tool. Its setup script also registers the example workflow.
 
 ## Use The Coding-Agent Skills
 
@@ -135,6 +139,7 @@ examples/lh-server/typescript/  TypeScript concept examples
 examples/user-tasks-bridge/     User Tasks Bridge user-task quickstart
 examples/lh-quarkus/            Quarkus extension quickstart
 examples/kafka-connectors/      Kafka Connect quickstart
+examples/agent-connector/       Agent Connector and local Ollama quickstart
 examples/saddle/                Saddle workflow and streaming examples
 skills/                         WfSpec references for coding agents
 ```
