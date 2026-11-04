@@ -11,7 +11,7 @@ The [website walkthrough](https://littlehorse.io/docs/getting-started/agent-conn
 ## Prerequisites
 
 - Docker with Docker Compose v2 and a running Docker daemon.
-- Java 21 and `lhctl` 1.3.0 or newer. See the [system setup guide](https://littlehorse.io/docs/getting-started/quickstart#system-setup) for installation instructions.
+- Java 21 and `lhctl` 1.3.1 or newer. See the [system setup guide](https://littlehorse.io/docs/getting-started/quickstart#system-setup) for installation instructions.
 - Internet access for images, Gradle dependencies, the model download, and the third-party MCP endpoint.
 - Enough Docker memory and disk space for LittleHorse, the Java connector, and `qwen3:1.7b`. Its model download is approximately 1.4 GB; inference requires additional memory. CPU-only inference can be slow.
 - Host ports `2023` and `8080` must be free. Stop any earlier standalone LittleHorse container first.
@@ -26,9 +26,9 @@ From the Developer Hub repository root:
 ./examples/agent-connector/00-quickstart/setup.sh
 ```
 
-The script starts LittleHorse Server, Dashboard, and Kafka using `ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.3.0`, starts Ollama, and pulls `qwen3:1.7b`. It then starts `ghcr.io/littlehorse-enterprises/lh-agent-connector:1.3.0`, waits for the connector's `text-to-text-agent` TaskDef, and runs the Java SDK 1.3.0 registration program to install `text-to-text-example`. All services remain running in the background. Nothing compiles the connector, and the script does not start a WfRun.
+The script starts LittleHorse Server, Dashboard, and Kafka using `ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.3.1`, starts Ollama, and pulls `qwen3:1.7b`. It then starts `ghcr.io/littlehorse-enterprises/lh-agent-connector:1.3.0`, waits for the connector's `text-to-text-agent` TaskDef, and runs the Java SDK 1.3.1 registration program to install `text-to-text-example`. All services remain running in the background. Nothing compiles the connector, and the script does not start a WfRun.
 
-The setup can be rerun. Ollama models are cached in a Compose volume. The Ollama image uses `latest`; the LittleHorse and connector images and Java SDK are pinned to `1.3.0`.
+The setup can be rerun. Ollama models are cached in a Compose volume. The Ollama image uses `latest`; the LittleHorse image and Java SDK are pinned to `1.3.1`, and the connector image is pinned to `1.3.0`.
 
 ### Agent Configuration
 

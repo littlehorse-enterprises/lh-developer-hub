@@ -12,7 +12,7 @@ Run all commands from the `lh-developer-hub` repository root. Start LittleHorse:
 ```bash
 docker run --pull always --name lh-standalone --rm -d \
   -p 2023:2023 -p 8080:8080 -p 9092:9092 \
-  ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.2.1
+  ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.3.1
 ```
 
 Start the application in development mode:

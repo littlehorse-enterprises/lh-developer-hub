@@ -33,7 +33,7 @@ Every implementation registers the same `quickstart` WfSpec, typed correlated ev
 
 ## Python Concept Examples
 
-Runnable counterparts for the frozen Python snippets in the server concept documentation live under [`python/`](./python/). They share `littlehorse-client==1.3.0` through [`python/requirements.txt`](./python/requirements.txt), while the published [`python/00-quickstart`](./python/00-quickstart/) remains independent. Change the shared requirement and use any compatible server version when testing an earlier release.
+Runnable counterparts for the frozen Python snippets in the server concept documentation live under [`python/`](./python/). They share `littlehorse-client==1.3.1` through [`python/requirements.txt`](./python/requirements.txt), while the published [`python/00-quickstart`](./python/00-quickstart/) remains independent. Change the shared requirement and use any compatible server version when testing an earlier release.
 
 From the repository root, validate all numbered examples without a server:
 
@@ -47,7 +47,7 @@ Native `ARRAY` and `MAP` examples are not included because those APIs are not cu
 
 Runnable counterparts for the Go snippets in the server concept documentation live under [`go/`](./go/). Each concept keeps task functions in `tasks.go`, workflow definitions in `workflow.go`, and setup in `main.go`.
 
-The concept examples share LittleHorse Go SDK `v1.3.0` through [`go/go.mod`](./go/go.mod). To change the version, update that file and then verify the shared module from the repository root:
+The concept examples share LittleHorse Go SDK `v1.3.1` through [`go/go.mod`](./go/go.mod). To change the version, update that file and then verify the shared module from the repository root:
 
 ```bash
 go -C examples/lh-server/go mod tidy
@@ -64,11 +64,11 @@ Runnable counterparts that track the Java snippets in the server concept documen
 
 ### Java SDK Version
 
-All Java examples currently use LittleHorse client `1.3.0`. The version is defined once in [`../../gradle/libs.versions.toml`](../../gradle/libs.versions.toml):
+All Java examples currently use LittleHorse client `1.3.1`. The version is defined once in [`../../gradle/libs.versions.toml`](../../gradle/libs.versions.toml):
 
 ```toml
 [versions]
-littlehorse = "1.3.0"
+littlehorse = "1.3.1"
 ```
 
 To upgrade every Java example, change only the `littlehorse` value in that file, then verify the projects from the repository root:
@@ -104,4 +104,4 @@ The existing `taskdef-app`, `variables-example`, `wfspec-app`, and `workflow-mig
 
 ## TypeScript Concept Examples
 
-The [`typescript`](./typescript/) directory contains runnable counterparts for the server concept documentation, including workflows, variables, conditions, threads, events, user tasks, structs, arrays, and maps. These examples use the TypeScript client `1.3.0` and require a compatible LittleHorse Server.
+The [`typescript`](./typescript/) directory contains runnable counterparts for the server concept documentation, including workflows, variables, conditions, threads, events, user tasks, structs, arrays, and maps. These examples use the TypeScript client `1.3.1` and require a compatible LittleHorse Server.

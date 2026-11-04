@@ -3,7 +3,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-VERSION='0.13.1'
+VERSION='1.3.0'
 ARTIFACT="lh-kafka-connect-${VERSION}"
 ARCHIVE="${SCRIPT_DIR}/${ARTIFACT}.zip"
 CONNECTORS_DIR="${SCRIPT_DIR}/connectors"
@@ -11,7 +11,7 @@ KAFKA_IMAGE='apache/kafka:4.0.0'
 
 docker run --pull always --name lh-standalone --rm -d \
     -p 2023:2023 -p 8080:8080 -p 9092:9092 \
-    ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.2.1
+    ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.3.1
 
 curl -fL \
     "https://github.com/littlehorse-enterprises/lh-kafka-connect/releases/download/v${VERSION}/${ARTIFACT}.zip" \
