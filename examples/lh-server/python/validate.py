@@ -14,6 +14,7 @@ WORKFLOWS = (
     ("09-external-events", "get_workflow"),
     ("10-interrupts", "UnderpantsWorkflow"),
     ("11-correlated-events", "get_workflow"),
+    ("12-checkpointed-tasks", "get_workflow"),
     ("16-user-tasks", "get_workflow"),
     ("21-structdefs", "quickstart_wf"),
 )
@@ -47,4 +48,4 @@ if __name__ == "__main__":
         raise SystemExit("Python compilation failed")
     for concept, factory in WORKFLOWS:
         load_workflow(concept, factory)
-    print("Validated 12 Python concept examples.")
+    print("Validated 13 Python concept examples.")
