@@ -15,6 +15,7 @@
     "external-events": "tsx src/09-external-events/main.ts",
     "interrupts": "tsx src/10-interrupts/main.ts",
     "correlated-events": "tsx src/11-correlated-events/main.ts",
+    "checkpointed-tasks": "tsx src/12-checkpointed-tasks/main.ts",
     "user-tasks": "tsx src/16-user-tasks/main.ts",
     "structdefs": "tsx src/21-structdefs/main.ts",
     "structdefs:run": "tsx src/21-structdefs/run.ts",

@@ -31,6 +31,18 @@ Every implementation registers the same `quickstart` WfSpec, typed correlated ev
 | Go | [`go/00-quickstart`](./go/00-quickstart/) |
 | .NET | [`dotnet/00-quickstart`](./dotnet/00-quickstart/) |
 
+## Checkpointed Tasks By Language
+
+These examples match the checkpointed-task concept docs: simulate sending a greeting, checkpoint its receipt, fail once, and replay the saved receipt on retry. Each README includes run commands and the worker output to look for. The Java reference uses `checkpointed-side-effect`; other SDK examples use distinct `checkpoint-greet-<sdk>` TaskDefs to avoid immutable-schema conflicts. Register and run one language version at a time because they share the `checkpoint-tasks` WfSpec.
+
+| Language | Example |
+| --- | --- |
+| Java | [`java/40-checkpoint-tasks`](./java/40-checkpoint-tasks/) |
+| Python | [`python/12-checkpointed-tasks`](./python/12-checkpointed-tasks/) |
+| Go | [`go/12-checkpointed-tasks`](./go/12-checkpointed-tasks/) |
+| TypeScript | [`typescript/src/12-checkpointed-tasks`](./typescript/src/12-checkpointed-tasks/) |
+| .NET | [`dotnet/12-checkpointed-tasks`](./dotnet/12-checkpointed-tasks/) |
+
 ## Python Concept Examples
 
 Runnable counterparts for the frozen Python snippets in the server concept documentation live under [`python/`](./python/). They share `littlehorse-client==1.3.0` through [`python/requirements.txt`](./python/requirements.txt), while the published [`python/00-quickstart`](./python/00-quickstart/) remains independent. Change the shared requirement and use any compatible server version when testing an earlier release.

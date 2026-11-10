@@ -32,6 +32,7 @@ Each main script registers its `TaskDef`s and `WfSpec`, starts its task workers,
 | External Events | `npm run external-events` | `lhctl run greet-event --wfRunId my-wf`, then `lhctl postEvent my-wf name-posted STR Obi-Wan` |
 | Interrupts | `npm run interrupts` | Run `collect-underpants`, then post the events shown in its concept README |
 | Correlated Events | `npm run correlated-events` | Run `correlated-event-example`, then post the correlated event shown in its concept README |
+| [Checkpointed Tasks](./src/12-checkpointed-tasks/) | `npm run checkpointed-tasks` | `lhctl run checkpoint-tasks name obiwan` |
 | User Tasks | `npm run user-tasks` | Run `favorite-player-demo`, then complete its UserTaskRun |
 | StructDefs | `npm run structdefs` | `npm run structdefs:run` |
 | Arrays | `npm run arrays` | Use the printed `lhctl run` command |

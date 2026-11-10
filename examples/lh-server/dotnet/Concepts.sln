@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserTasks", "16-user-tasks\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arrays", "22-arrays\Arrays.csproj", "{A24F5297-E85E-4321-AF29-F76F1B5328F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckpointedTasks", "12-checkpointed-tasks\CheckpointedTasks.csproj", "{777828FC-0A1E-4A81-A424-E320663B70A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,5 +80,9 @@ Global
 		{A24F5297-E85E-4321-AF29-F76F1B5328F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A24F5297-E85E-4321-AF29-F76F1B5328F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A24F5297-E85E-4321-AF29-F76F1B5328F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{777828FC-0A1E-4A81-A424-E320663B70A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{777828FC-0A1E-4A81-A424-E320663B70A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{777828FC-0A1E-4A81-A424-E320663B70A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{777828FC-0A1E-4A81-A424-E320663B70A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
