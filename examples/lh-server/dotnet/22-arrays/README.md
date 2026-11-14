@@ -8,4 +8,4 @@ dotnet run --project examples/lh-server/dotnet/22-arrays -- workers
 lhctl run arrays-example value-to-check 3
 ```
 
-The .NET SDK 1.3.0 does not expose the Java SDK's array `Size()` or indexed-read expressions. This example reports the element count in the `consume-array` task instead; containment and per-element child threads remain part of the workflow.
+The .NET SDK 1.3.1 does not expose the Java SDK's array `Size()` or indexed-read expressions. This example reports the element count in the `consume-array` task instead; containment and per-element child threads remain part of the workflow.

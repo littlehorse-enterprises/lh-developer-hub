@@ -42,4 +42,4 @@ Each main script registers its `TaskDef`s and `WfSpec`, starts its task workers,
 
 The current TypeScript task-worker schema API maps `z.array()` to `JSON_ARR`. It does not expose the native `ARRAY` input/output annotation available in Java and .NET, nor native `ARRAY` fields in a `StructDef`. The arrays example therefore exercises native arrays inside the workflow DSL, but does not claim native collection task I/O support.
 
-The TypeScript WfSpec API requires a LittleHorse `1.3.0-RC3` or current `master` server.
+The TypeScript WfSpec API requires a compatible LittleHorse 1.3 server; use `1.3.1` to match the client.

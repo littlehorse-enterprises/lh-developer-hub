@@ -1,6 +1,6 @@
 services:
   littlehorse:
-    image: ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.3.0
+    image: ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.3.1
     environment:
       LHS_LISTENERS: EXTERNAL:2023,INTERNAL:2024
       LHS_LISTENERS_PROTOCOL_MAP: EXTERNAL:PLAIN,INTERNAL:PLAIN

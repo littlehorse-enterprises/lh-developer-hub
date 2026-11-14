@@ -22,7 +22,7 @@ The validation command compiles every example and constructs every WfSpec withou
 python examples/lh-server/python/validate.py
 ```
 
-The examples use `littlehorse-client==1.3.0`. To use another client version, update [`requirements.txt`](./requirements.txt), recreate the shared environment, and run the validation command again. The server version is configured separately in the [server examples guide](../README.md).
+The examples use `littlehorse-client==1.3.1`. To use another client version, update [`requirements.txt`](./requirements.txt), recreate the shared environment, and run the validation command again. The server version is configured separately in the [server examples guide](../README.md).
 
 Native `ARRAY` and `MAP` examples are omitted because those APIs are not available in the Python SDK.
 

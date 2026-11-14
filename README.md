@@ -31,7 +31,7 @@ cd lh-developer-hub
 
 docker run --pull always --name lh-standalone --rm -d \
   -p 2023:2023 -p 8080:8080 -p 9092:9092 \
-  ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.2.1
+  ghcr.io/littlehorse-enterprises/littlehorse/lh-standalone:1.3.1
 
 lhctl whoami
 ```
@@ -71,18 +71,18 @@ The same quickstart is runnable in four languages:
 | --- | --- | --- |
 | Java | Java 21+ | [`java/00-quickstart`](./examples/lh-server/java/00-quickstart/) |
 | Python | Python 3.10-3.13 | [`python/00-quickstart`](./examples/lh-server/python/00-quickstart/) |
-| Go | Go 1.24+ | [`go/00-quickstart`](./examples/lh-server/go/00-quickstart/) |
+| Go | Go 1.25+ | [`go/00-quickstart`](./examples/lh-server/go/00-quickstart/) |
 | .NET | .NET 8+ | [`dotnet/00-quickstart`](./examples/lh-server/dotnet/00-quickstart/) |
 
 ## Choose Compatible Examples
 
 | Area | Client/server version | Additional requirements |
 | --- | --- | --- |
-| Four-language quickstart | LittleHorse `1.2.1` | Language runtime listed above |
-| Java and Python concept examples | Client `1.3.0`; compatible server | Java 21+ or Python 3.10-3.13 |
-| Go concept examples | Client `1.3.0`; compatible server | Go 1.25+ |
-| TypeScript concept examples | Client `1.3.0`; compatible 1.3 server | Node.js 20+ |
-| Agent Connector quickstart | Connector, server, and Java client `1.3.0` | Java 21, Docker Compose, `lhctl`, and local model resources |
+| Four-language quickstart | LittleHorse `1.3.1` | Language runtime listed above |
+| Java and Python concept examples | Client `1.3.1`; compatible server | Java 21+ or Python 3.10-3.13 |
+| Go concept examples | Client `1.3.1`; compatible server | Go 1.25+ |
+| TypeScript concept examples | Client `1.3.1`; compatible 1.3 server | Node.js 20+ |
+| Agent Connector quickstart | Server and Java client `1.3.1`; connector `1.3.0` | Java 21, Docker Compose, `lhctl`, and local model resources |
 | Saddle examples | Version is environment-specific | Access to a Saddle environment |
 
 LittleHorse clients read `LHC_*` environment variables. The same example code can connect to the local standalone server, another LittleHorse deployment, or LittleHorse Cloud when those variables are configured.
